@@ -21,6 +21,7 @@
 #include "sbgEComLogMag.h"
 #include "sbgEComLogMagCalib.h"
 #include "sbgEComLogOdometer.h"
+#include "sbgEComLogPtp.h"
 #include "sbgEComLogRawData.h"
 #include "sbgEComLogSat.h"
 #include "sbgEComLogSessionInfo.h"
@@ -28,6 +29,8 @@
 #include "sbgEComLogStatus.h"
 #include "sbgEComLogUsbl.h"
 #include "sbgEComLogUtc.h"
+#include "sbgEComLogVelocity.h"
+#include "sbgEComLogVibMon.h"
 
 //----------------------------------------------------------------------//
 //- Public methods                                                     -//
@@ -95,6 +98,12 @@ SbgErrorCode sbgEComLogParse(SbgEComClass msgClass, SbgEComMsgId msgId, const vo
         case SBG_ECOM_LOG_PTP_STATUS:
             errorCode = sbgEComLogPtpReadFromStream(&pLogData->ptpData, &inputStream);
             break;
+        case SBG_ECOM_LOG_VIB_MON_FFT:
+            errorCode = sbgEComLogVibMonFftReadFromStream(&pLogData->vibMonFft, &inputStream);
+            break;
+        case SBG_ECOM_LOG_VIB_MON_REPORT:
+            errorCode = sbgEComLogVibMonReportReadFromStream(&pLogData->vibMonReport, &inputStream);
+            break;
         case SBG_ECOM_LOG_GPS1_VEL:
         case SBG_ECOM_LOG_GPS2_VEL:
             errorCode = sbgEComLogGnssVelReadFromStream(&pLogData->gpsVelData, &inputStream);
@@ -154,6 +163,10 @@ SbgErrorCode sbgEComLogParse(SbgEComClass msgClass, SbgEComMsgId msgId, const vo
         case SBG_ECOM_LOG_SESSION_INFO:
             errorCode = sbgEComLogSessionInfoReadFromStream(&pLogData->sessionInfoData, &inputStream);
             break;
+        case SBG_ECOM_LOG_VELOCITY_1:
+            errorCode = sbgEComLogVelocityReadFromStream(&pLogData->velocityData, &inputStream);
+            break;
+
 
         default:
             errorCode = SBG_ERROR;

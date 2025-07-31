@@ -176,6 +176,7 @@ It briefly describe which parameters are contained in each output log.
 | [SBG_ECOM_LOG_NMEA_VTG (08)](#SBG_ECOM_LOG_NMEA_VTG) | Track an Speed over the ground.                                                        |
 | [SBG_ECOM_LOG_NMEA_ROT (09)](#SBG_ECOM_LOG_NMEA_ROT) | Rate and direction of turn.                                                            |
 | [SBG_ECOM_LOG_NMEA_GSV (10)](#SBG_ECOM_LOG_NMEA_GSV) | GNSS Satellites in View with azimuth, elevation and SNR information.                   |
+| [SBG_ECOM_LOG_NMEA_GSA (11)](#SBG_ECOM_LOG_NMEA_GSA) | GNSS DOP and active satellites.                                                        |
 
 ---
 
@@ -559,7 +560,66 @@ $GBGSV,4,4,15,31,04,087,,20,05,273,,06,03,043,*55<CR><LF>
 > If a satellite is tracked but the SNR is unknown, a default SNR of 60 dB is reported.
 
 ---
-## Proprietary NMEA Messages
+
+### SBG_ECOM_LOG_NMEA_GSA (11) {#SBG_ECOM_LOG_NMEA_GSA}
+
+The `SBG_ECOM_LOG_NMEA_GSA` message provides information about the GNSS fix type, the satellites used in the navigation solution, and Dilution of Precision (DOP) values, which indicate the quality of the position solution.
+
+#### Multi-Constellations
+
+The NMEA talker ID is used to output satellite information for each constellation:
+
+- **GPGSV:** Lists all visible GPS and SBAS satellites with associated information.
+- **GLGSV:** Lists all visible GLONASS satellites with associated information.
+- **GAGSV:** Lists all visible Galileo satellites with associated information.
+- **GBGSV:** Lists all visible BeiDou satellites with associated information.
+- **GIGSV:** Lists all visible NavIC satellites with associated information.
+- **GQGSV:** Lists all visible QZSS satellites with associated information.
+
+> [!NOTE]
+> SBG Systems products do not output GNGSV messages to comply with NMEA standards.
+
+#### Message Re-Assembly
+
+GSA messages are sent using multiple NMEA frames to comply with the 80-character limit. Each GSA message contains the total number of messages as well as the current message number. Using this information, it is possible to reassemble the GSA message and get all visible satellites for each constellation.
+
+**Empty Message Example**
+
+The following message is sent by the INS when there is no GNSS reception:
+```
+$GPGSA,M,1,,,,,,,,,,,,,99.9,99.9,99.9,1*18<CR><LF>
+```
+
+**Multi-Constellation Example**
+
+The following example shows a typical GSA reporting when tracking multi-constellation satellites in a clean environment.
+
+```
+$GPGSA,A,3,8,2,22,3,14,1,27,10,32,,,,1.9,1.1,1.6,1*28<CR><LF>
+$GLGSA,A,3,87,79,71,78,72,88,86,65,,,,,1.9,1.1,1.6,2*3F<CR><LF>
+$GAGSA,A,3,11,2,24,19,25,16,12,4,,,,,1.9,1.1,1.6,3*38<CR><LF>
+$GBGSA,A,3,41,27,13,5,29,20,32,,,,,,1.9,1.1,1.6,4*08<CR><LF>
+```
+
+#### Message Structure
+
+- **Message Name (ID):** `SBG_ECOM_LOG_NMEA_GSA (11)`
+- **Compatibility:** INS capable products
+- **Firmware:** ![ELLIPSE](https://img.shields.io/badge/ELLIPSE-3.2-blue) ![HPINS](https://img.shields.io/badge/HPINS-5.5-blue)
+
+| Field | Name         | Format   | Description                                                        |
+| ----- | ------------ | -------- | ------------------------------------------------------------------ |
+| 0     | $##GSA       | string   | Message ID – GSA frame                                             |
+| 1     | Mode         | char     | Positioning mode: `M` = Manual, `A` = Automatic                    |
+| 2     | Fix Type     | d        | `1` = No fix, `2` = 2D fix, `3` = 3D fix                           |
+| 3–14  | PRNs         | ii       | Up to 12 PRN numbers used in position solution (empty if not used) |
+| 15    | PDOP         | ff.f     | Position Dilution of Precision                                     |
+| 16    | HDOP         | ff.f     | Horizontal Dilution of Precision                                   |
+| 17    | VDOP         | ff.f     | Vertical Dilution of Precision                                     |
+| 18    | Checksum     | *cs      | XOR of all previous bytes except $                                 |
+| 19    | End of frame | <CR><LF> | Carriage return and line feed                                      |
+
+---## Proprietary NMEA Messages
 
 The `SBG_ECOM_CLASS_LOG_NMEA_1 (0x03)` message class includes all proprietary NMEA messages and other non-standard messages that utilize NMEA formatting.  
 These messages primarily provide Kalman filtered data, including navigation, velocity, and attitude information.

@@ -10,7 +10,7 @@
  *
  * \copyright       Copyright (C) 2007-2024, SBG Systems SAS. All rights reserved.
  * \beginlicense    The MIT license
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -28,7 +28,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  * \endlicense
  */
 
@@ -58,6 +58,8 @@ extern "C" {
 #include "logs/sbgEComLog.h"
 #include "protocol/sbgEComProtocol.h"
 #include "sessionInfo/sbgEComSessionInfo.h"
+#include "vibMon/sbgEComVibMonFft.h"
+#include "vibMon/sbgEComVibMonFftCtx.h"
 #include "sbgEComVersion.h"
 #include "sbgEComGetVersion.h"
 

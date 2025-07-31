@@ -1,6 +1,9 @@
 // sbgCommonLib headers
 #include <sbgCommon.h>
 
+// Project headers
+#include <pager/sbgEComPager.h>
+
 // Local headers
 #include "sbgEComSessionInfo.h"
 
@@ -9,19 +12,16 @@
 //----------------------------------------------------------------------//
 
 /*!
- * Reset a session information context.
+ * Checks whether a multi-page message has been completely received.
  *
- * \param[in]   pCtx                        Context.
+ * \param[in]   pCtx                        Session information context.
+ * \return                                  True if the entire message has been received.
  */
-static void sbgEComSessionInfoCtxReset(SbgEComSessionInfoCtx *pCtx)
+static bool sbgEComSessionInfoCtxIsComplete(const SbgEComSessionInfoCtx *pCtx)
 {
     assert(pCtx);
 
-    pCtx->string[0] = '\0';
-
-    pCtx->length    = 0;
-    pCtx->pageIndex = 0;
-    pCtx->nrPages   = 0;
+    return sbgEComPagerJoinIsComplete(&pCtx->pager);
 }
 
 //----------------------------------------------------------------------//
@@ -34,63 +34,20 @@ void sbgEComSessionInfoCtxConstruct(SbgEComSessionInfoCtx *pCtx)
 
     memset(pCtx->string, 0, sizeof(pCtx->string));
 
-    pCtx->length    = 0;
-    pCtx->pageIndex = 0;
-    pCtx->nrPages   = 0;
+    sbgEComPagerInitForJoin(&pCtx->pager, pCtx->string, sizeof(pCtx->string) - 1);
 }
 
 SbgErrorCode sbgEComSessionInfoCtxProcess(SbgEComSessionInfoCtx *pCtx, uint16_t pageIndex, uint16_t nrPages, const void *pBuffer, size_t size)
 {
-    SbgErrorCode                         errorCode = SBG_NOT_READY;
+    SbgErrorCode                         errorCode;
+    size_t                               stringSize;
 
     assert(pCtx);
-    assert(pageIndex < nrPages);
-    assert(pBuffer || (size == 0));
 
-    if (pCtx->pageIndex != pageIndex)
-    {
-        if ((pageIndex != 0) || (pCtx->pageIndex != pCtx->nrPages))
-        {
-            SBG_LOG_WARNING(SBG_ERROR, "unexpected page index received, session information context reset");
-        }
+    errorCode   = sbgEComPagerJoin(&pCtx->pager, pageIndex, nrPages, pBuffer, size);
+    stringSize  = sbgEComPagerGetBufferSize(&pCtx->pager);
 
-        sbgEComSessionInfoCtxReset(pCtx);
-    }
-
-    if (pageIndex == 0)
-    {
-        pCtx->nrPages = nrPages;
-    }
-
-    if (pCtx->pageIndex == pageIndex)
-    {
-        size_t                               newSize;
-
-        newSize = pCtx->length + size;
-
-        //
-        // Make sure there's at least one available slot for the null-terminating byte.
-        //
-        if (newSize < sizeof(pCtx->string))
-        {
-            memcpy(&pCtx->string[pCtx->length], pBuffer, size);
-            pCtx->string[newSize] = '\0';
-
-            pCtx->length = newSize;
-            pCtx->pageIndex++;
-
-            if (pCtx->pageIndex == pCtx->nrPages)
-            {
-                errorCode = SBG_NO_ERROR;
-            }
-        }
-        else
-        {
-            SBG_LOG_ERROR(SBG_BUFFER_OVERFLOW, "session information too large");
-
-            sbgEComSessionInfoCtxReset(pCtx);
-        }
-    }
+    pCtx->string[stringSize] = '\0';
 
     return errorCode;
 }
@@ -101,7 +58,7 @@ const char *sbgEComSessionInfoCtxGetString(const SbgEComSessionInfoCtx *pCtx)
 
     assert(pCtx);
 
-    if ((pCtx->nrPages != 0) && (pCtx->pageIndex == pCtx->nrPages))
+    if (sbgEComSessionInfoCtxIsComplete(pCtx))
     {
         pString = pCtx->string;
     }

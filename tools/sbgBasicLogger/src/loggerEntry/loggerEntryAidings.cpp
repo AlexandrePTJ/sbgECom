@@ -36,7 +36,7 @@ void CLoggerEntryOdometer::writeHeaderToFile(const CLoggerContext &context)
 void CLoggerEntryOdometer::writeDataToFile(const CLoggerContext &context, const SbgEComLogUnion &logData)
 {
 	const SbgEComLogOdometer			&data = logData.odometerData;
-					
+
 	m_outFile	<< context.fmtTime(data.timeStamp)									<< "\t"
 				<< context.fmtStatus(data.status)									<< "\t"
 				<< data.velocity													<< "\n";
@@ -45,7 +45,7 @@ void CLoggerEntryOdometer::writeDataToFile(const CLoggerContext &context, const 
 void CLoggerEntryOdometer::writeDataToConsole(const CLoggerContext &context, const SbgEComLogUnion &logData)
 {
 	const SbgEComLogOdometer			&data = logData.odometerData;
-	
+
 	std::cout	<< std::setw(12) << getName()										<< ": "
 				<< std::setw(12) << context.fmtStatus(data.status)
 				<< std::setw(12) << data.velocity									<< "\n";
@@ -69,7 +69,7 @@ void CLoggerEntryAirData::writeHeaderToFile(const CLoggerContext &context)
 void CLoggerEntryAirData::writeDataToFile(const CLoggerContext &context, const SbgEComLogUnion &logData)
 {
 	const SbgEComLogAirData				&data = logData.airData;
-					
+
 	m_outFile	<< context.fmtTime(data.timeStamp)									<< "\t"
 				<< context.fmtStatus(data.status)									<< "\t"
 				<< data.pressureAbs													<< "\t"
@@ -109,7 +109,7 @@ void CLoggerEntryDepth::writeHeaderToFile(const CLoggerContext &context)
 void CLoggerEntryDepth::writeDataToFile(const CLoggerContext &context, const SbgEComLogUnion &logData)
 {
 	const SbgEComLogDepth				&data = logData.depthData;
-					
+
 	m_outFile	<< context.fmtTime(data.timeStamp)									<< "\t"
 				<< context.fmtStatus(data.status)									<< "\t"
 				<< data.pressureAbs													<< "\t"
@@ -144,7 +144,7 @@ void CLoggerEntryUsbl::writeHeaderToFile(const CLoggerContext &context)
 void CLoggerEntryUsbl::writeDataToFile(const CLoggerContext &context, const SbgEComLogUnion &logData)
 {
 	const SbgEComLogUsbl				&data = logData.usblData;
-					
+
 	m_outFile	<< context.fmtTime(data.timeStamp)									<< "\t"
 				<< context.fmtStatus(data.status)									<< "\t"
 				<< data.latitude													<< "\t"
@@ -167,6 +167,51 @@ void CLoggerEntryUsbl::writeDataToConsole(const CLoggerContext &context, const S
 				<< std::setw(12) << data.latitudeAccuracy
 				<< std::setw(12) << data.longitudeAccuracy
 				<< std::setw(12) << data.depthAccuracy								<< "\n";
+}
+
+//----------------------------------------------------------------------//
+//- CLoggerEntryVelocity                                               -//
+//----------------------------------------------------------------------//
+void CLoggerEntryVelocity::writeHeaderToFile(const CLoggerContext &context)
+{
+	m_outFile	<< context.getTimeColTitle()	<< "\tstatus\tvel0\tvel1\tvel2\tvelStd0\tvelStd1\tvelStd2\n";
+	m_outFile	<< context.getTimeUnit()		<< "\t(na)\t(m.s^-1)\t(m.s^-1)\t(m.s^-1)\t(m.s^-1)\t(m.s^-1)\t(m.s^-1)\n";
+}
+
+void CLoggerEntryVelocity::writeDataToFile(const CLoggerContext &context, const SbgEComLogUnion &logData)
+{
+	const SbgEComLogVelocity			&data = logData.velocityData;
+
+	m_outFile	<< context.fmtTime(data.timeStamp)									<< "\t"
+				<< context.fmtStatus(data.status)									<< "\t"
+				<< data.velocity[0]													<< "\t"
+				<< data.velocity[1]													<< "\t"
+				<< data.velocity[2]													<< "\t"
+				<< data.velocityStd[0]												<< "\t"
+				<< data.velocityStd[1]												<< "\t"
+				<< data.velocityStd[2]												<< "\n";
+}
+
+void CLoggerEntryVelocity::writeDataToConsole(const CLoggerContext &context, const SbgEComLogUnion &logData)
+{
+	const SbgEComLogVelocity			&data = logData.velocityData;
+
+	std::cout	<< std::setw(12) << getName()										<< ": "
+				<< std::setw(12) << context.fmtStatus(data.status)
+				<< std::setw(12) << data.velocity[0]
+				<< std::setw(12) << data.velocity[1]
+				<< std::setw(12) << data.velocity[2]
+				<< std::setw(12) << data.velocityStd[0]
+				<< std::setw(12) << data.velocityStd[1]
+				<< std::setw(12) << data.velocityStd[2]								<< "\n";
+}
+
+//----------------------------------------------------------------------//
+//- CLoggerEntryVelocity                                               -//
+//----------------------------------------------------------------------//
+std::string CLoggerEntryVelocity1::getName() const
+{
+	return "velocity1";
 }
 
 }; // Namespace sbg

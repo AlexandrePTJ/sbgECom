@@ -42,7 +42,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_GNSS#_VEL
      */
-    class CLoggerEntryGnssVel : public ILoggerEntry
+    class CLoggerEntryGnssVel : public IFileLogger
     {
     private:
         
@@ -77,7 +77,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_GNSS#_POS
      */
-    class CLoggerEntryGnssPos : public ILoggerEntry
+    class CLoggerEntryGnssPos : public IFileLogger
     {
     private:
         
@@ -112,7 +112,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_GNSS#_HDT
      */
-    class CLoggerEntryGnssHdt : public ILoggerEntry
+    class CLoggerEntryGnssHdt : public IFileLogger
     {
     private:
         
@@ -147,7 +147,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_GNSS#_RAW
      */
-    class CLoggerEntryGnssRaw : public ILoggerEntry
+    class CLoggerEntryGnssRaw : public IFileLogger
     {
     public:
         //----------------------------------------------------------------------//
@@ -170,7 +170,7 @@ namespace sbg
          * 
          * \return                                          false for text file and true for binary.
          */
-        bool isBinary() const override;
+        bool isBinaryFile() const override;
 
     private:
         
@@ -190,7 +190,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_GNSS#_SAT
      */
-    class CLoggerEntryGnssSat : public ILoggerEntry
+    class CLoggerEntryGnssSat : public IFileLogger
     {
     private:
         

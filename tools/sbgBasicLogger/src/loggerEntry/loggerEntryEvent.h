@@ -42,7 +42,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_EVENT_# & SBG_ECOM_LOG_EVENT_OUT_#
      */
-    class CLoggerEntryEvent : public ILoggerEntry
+    class CLoggerEntryEvent : public IFileLogger
     {
     private:
         

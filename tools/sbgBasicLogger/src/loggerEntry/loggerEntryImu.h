@@ -41,7 +41,7 @@ namespace sbg
     /*!
      * Generic handler for IMU data Handle
      */
-    class CLoggerEntryImu : public ILoggerEntry
+    class CLoggerEntryImu : public IFileLogger
     {
     protected:
 

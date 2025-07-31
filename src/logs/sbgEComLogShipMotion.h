@@ -45,34 +45,37 @@ extern "C" {
 //- Heave status definitions                                           -//
 //----------------------------------------------------------------------//
 
-#define SBG_ECOM_HEAVE_VALID                (0x0001u << 0)          /*!< Set to 1 after heave convergence time. */
-#define SBG_ECOM_HEAVE_VEL_AIDED            (0x0001u << 1)          /*!< Set to 1 if heave output is compensated for transient accelerations. */
-#define SBG_ECOM_HEAVE_SURGE_SWAY_INCLUDED  (0x0001u << 2)          /*!< Set to 1 if surge and sway channels are provided in this output. */
-#define SBG_ECOM_HEAVE_PERIOD_INCLUDED      (0x0001u << 3)          /*!< Set to 1 if the heave period is provided in this output. */
-#define SBG_ECOM_HEAVE_PERIOD_VALID         (0x0001u << 4)          /*!< Set to 1 if the returned heave period is assumed to be valid. */
-#define SBG_ECOM_HEAVE_SWELL_MODE           (0x0001u << 5)          /*!< Set to 1 if the real time heave filter is using the swell mode computations. */
+#define SBG_ECOM_SHIP_MOTION_HEAVE_VALID            (0x0001u << 0)      /*!< Set if the heave filter has converged and is delivering valid results. */
+#define SBG_ECOM_SHIP_MOTION_VEL_AIDED              (0x0001u << 1)      /*!< Set if the heave algorithm uses transient accelerations to improve accuracy. */
+#define SBG_ECOM_SHIP_MOTION_SURGE_SWAY_VALID       (0x0001u << 2)      /*!< Set if surge, sway, and velocity (velX, velY) channels are valid and available. */
+#define SBG_ECOM_SHIP_MOTION_RESERVED               (0x0001u << 3)      /*!< Reserved. Deprecated status flag, subject to potential reuse. */
+#define SBG_ECOM_SHIP_MOTION_HEAVE_PERIOD_VALID     (0x0001u << 4)      /*!< Set if the main wave or swell period is available and valid. */
+#define SBG_ECOM_SHIP_MOTION_SWELL_MODE             (0x0001u << 5)      /*!< Set if the heave filter is operating in swell computation mode. */
+#define SBG_ECOM_SHIP_MOTION_ACCEL_VALID            (0x0001u << 6)      /*!< Set if X, Y, and Z accelerations are valid and available. */
 
 //----------------------------------------------------------------------//
 //- Log structure definitions                                          -//
 //----------------------------------------------------------------------//
 
 /*!
- * Structure that stores data for the SBG_ECOM_LOG_SHIP_MOTION or SBG_ECOM_LOG_SHIP_MOTION_HP message.
+ * Structure storing data for the SBG_ECOM_LOG_SHIP_MOTION or SBG_ECOM_LOG_SHIP_MOTION_HP message.
  * 
- * The data are expressed in the standard NED Inertial Navigation System coordinate frame. 
- * Surge is positive forward, sway is positive right and heave is positive down. 
+ * Ship motion measurements are defined in a vessel-specific coordinate frame:
+ * - Surge: Longitudinal displacement (positive toward the bow/forward).
+ * - Sway: Transverse displacement (positive toward the starboard side/right).
+ * - Heave: Vertical displacement (positive downward).
  * 
- * Note that status flag should be read before using the different parameters because it will provide validity information 
- * about all included outputs. Some frames may not provide the heave period or surge/sway axes for example
+ * Note: Always check the status flags before using the data, as they indicate the validity of each output.
+ * Some data fields, such as the heave period or surge/sway components, may be unavailable in certain frames.
  */
 typedef struct _SbgEComLogShipMotion
 {
-    uint32_t    timeStamp;                  /*!< Time in us since the sensor power up. */
-    uint16_t    status;                     /*!< Ship Motion data status bitmask */
-    float       mainHeavePeriod;            /*!< Main heave period in seconds. */
-    float       shipMotion[3];              /*!< Surge, sway and heave in meters. */
-    float       shipAccel[3];               /*!< Surge, sway and heave ship Acceleration in m.s^-2. */
-    float       shipVel[3];                 /*!< Surge, sway and heave velocities */
+    uint32_t    timeStamp;                  /*!< Time in microseconds since sensor power-up. */
+    uint16_t    status;                     /*!< Status bitmask indicating validity of ship motion data. */
+    float       mainHeavePeriod;            /*!< Dominant heave period in seconds. */
+    float       shipMotion[3];              /*!< Surge, sway, and heave positions in meters. */
+    float       shipAccel[3];               /*!< Surge, sway, and heave accelerations in m.s^-2. */
+    float       shipVel[3];                 /*!< Surge, sway, and heave velocities in m.s^-1. */
 } SbgEComLogShipMotion;
 
 //----------------------------------------------------------------------//
@@ -100,6 +103,15 @@ SbgErrorCode sbgEComLogShipMotionWriteToStream(const SbgEComLogShipMotion *pLogD
 //----------------------------------------------------------------------//
 //- DEPRECATED - Used for backward compatibility                       -//
 //----------------------------------------------------------------------//
+
+#ifdef SBG_ECOM_USE_DEPRECATED_MACROS
+    #define SBG_ECOM_HEAVE_VALID                    SBG_ECOM_SHIP_MOTION_HEAVE_VALID
+    #define SBG_ECOM_HEAVE_VEL_AIDED                SBG_ECOM_SHIP_MOTION_VEL_AIDED
+    #define SBG_ECOM_HEAVE_SURGE_SWAY_INCLUDED      SBG_ECOM_SHIP_MOTION_SURGE_SWAY_VALID
+    #define SBG_ECOM_HEAVE_PERIOD_INCLUDED          SBG_ECOM_SHIP_MOTION_HEAVE_PERIOD_VALID
+    #define SBG_ECOM_HEAVE_PERIOD_VALID             SBG_ECOM_SHIP_MOTION_HEAVE_PERIOD_VALID
+    #define SBG_ECOM_HEAVE_SWELL_MODE               SBG_ECOM_SHIP_MOTION_SWELL_MODE
+#endif
 
 SBG_DEPRECATED_TYPEDEF(typedef struct _SbgEComLogShipMotion SbgLogShipMotionData);
 

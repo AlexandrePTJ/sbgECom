@@ -1,5 +1,4 @@
 # sbgBasicLogger
-
 The sbgBasicLogger let you log and display sbgECom binary messages into CSV like text files. 
 The provided code source is written in C++ 14 to ensure maximum compatibility.
 
@@ -44,7 +43,6 @@ Once the UTC time is available and synchronized, it switches to the ISO 8601 for
 To exclude logs recorded before a valid UTC time is available, use the option `--discard-invalid-time `.
 
 # Usage
-
 The sbgBasicLogger implements a simple to use command line interface (CLI):
 
 ```sh
@@ -94,3 +92,55 @@ sbgBasicLogger -i <BINARY_FILE> -p
   -m, --time-mode=timestamp or utcIso8601            select time base to output
   -t, --discard-invalid-time                         discard data without a valid UTC time
 ```
+
+## Vibration Monitoring
+
+### Overview
+SBG Systems IMUs embed a real-time **vibration analysis engine** that:
+1. Computes an FFT on selected sensor axes (X, Y, Z).  
+2. Extracts band-limited metrics (RMS & peak) for compact, easy-to-monitor diagnostics.
+3. Logs the **full FFT spectrum** for advanced offline analysis and troubleshooting.
+
+`sbgBasicLogger` suppors both kinds of messages:
+
+| Message type          | File name pattern                  | Purpose                                                          |
+|-----------------------|------------------------------------|------------------------------------------------------------------|
+| **Monitoring report** | `vibMonReport_<axis>_<window>.txt` | One line per timestamp, rms, peak freq, peak magnitude per band. |
+| **FFT spectrum**      | `vibFftAcf_<axis>_<window>.txt`    | Raw FFT (Amplitude-Scaled) for spectrograms & peak tracking.     |
+
+> **Tip** – To improve refresh rate and focus on relevant data, log only the axes and FFT windows that are essential for your analysis.
+
+### Axes & Windows
+The `sbgBasicLogger` creates **one spectrum file per (axis × window)** so each combination is easy to analyse:
+
+| Option          | Description                                              |
+|-----------------|----------------------------------------------------------|
+| **Axes**        | `X`, `Y`, `Z` – enable individually or together.         |
+| **FFT windows** | `Rectangular`, `Hanning`, `FlatTop` (select any subset). |
+
+### Plot a Spectrogram
+
+A Python script is provided to visualize vibration monitoring FFT data as a **spectrogram**.
+
+#### Requirements
+
+* **Python 3.x**
+* The following Python packages:
+
+  ```bash
+  pip install numpy pandas matplotlib
+  ```
+
+#### Usage
+
+Run the script with the FFT file of interest:
+
+```bash
+python plotVibMonFft.py vibFftAcf_z_flatTop.txt
+```
+
+The script automatically:
+
+* Parses the frequency axis and timestamps,
+* Converts acceleration from **m/s² to g**,
+* Plots a time-frequency spectrogram with an adaptive color scale.

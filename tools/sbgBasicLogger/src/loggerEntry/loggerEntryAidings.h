@@ -38,7 +38,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_ODO_VEL
      */
-    class CLoggerEntryOdometer : public ILoggerEntry, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_ODO_VEL>
+    class CLoggerEntryOdometer : public IFileLogger, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_ODO_VEL>
     {
     public:
 
@@ -48,13 +48,13 @@ namespace sbg
 
         /*!
          * Returns the log name.
-         * 
+         *
          * \return                                          log name.
          */
         std::string getName() const override;
-        
+
     private:
-        
+
         //----------------------------------------------------------------------//
         //- Private methods                                                    -//
         //----------------------------------------------------------------------//
@@ -68,7 +68,7 @@ namespace sbg
 
         /*!
          * Write the data log to the file
-         * 
+         *
          * \param[in]   context                             Logger context and settings.
          * \param[in]   logData                             Input sbgECom log data to write.
          */
@@ -76,7 +76,7 @@ namespace sbg
 
         /*!
          * Write the data log to the console
-         * 
+         *
          * \param[in]   context                             Logger context and settings.
          * \param[in]   logData                             Input sbgECom log data to write.
          */
@@ -86,7 +86,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_AIR_DATA
      */
-    class CLoggerEntryAirData : public ILoggerEntry, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_AIR_DATA>
+    class CLoggerEntryAirData : public IFileLogger, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_AIR_DATA>
     {
     public:
 
@@ -96,13 +96,13 @@ namespace sbg
 
         /*!
          * Returns the log name.
-         * 
+         *
          * \return                                          log name.
          */
         std::string getName() const override;
 
     private:
-        
+
         //----------------------------------------------------------------------//
         //- Private methods                                                    -//
         //----------------------------------------------------------------------//
@@ -116,7 +116,7 @@ namespace sbg
 
         /*!
          * Write the data log to the file
-         * 
+         *
          * \param[in]   context                             Logger context and settings.
          * \param[in]   logData                             Input sbgECom log data to write.
          */
@@ -124,7 +124,7 @@ namespace sbg
 
         /*!
          * Write the data log to the console
-         * 
+         *
          * \param[in]   context                             Logger context and settings.
          * \param[in]   logData                             Input sbgECom log data to write.
          */
@@ -134,7 +134,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_DEPTH
      */
-    class CLoggerEntryDepth : public ILoggerEntry, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_DEPTH>
+    class CLoggerEntryDepth : public IFileLogger, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_DEPTH>
     {
     public:
 
@@ -144,13 +144,13 @@ namespace sbg
 
         /*!
          * Returns the log name.
-         * 
+         *
          * \return                                          log name.
          */
         std::string getName() const override;
-        
+
     private:
-        
+
         //----------------------------------------------------------------------//
         //- Private methods                                                    -//
         //----------------------------------------------------------------------//
@@ -164,7 +164,7 @@ namespace sbg
 
         /*!
          * Write the data log to the file
-         * 
+         *
          * \param[in]   context                             Logger context and settings.
          * \param[in]   logData                             Input sbgECom log data to write.
          */
@@ -172,7 +172,7 @@ namespace sbg
 
         /*!
          * Write the data log to the console
-         * 
+         *
          * \param[in]   context                             Logger context and settings.
          * \param[in]   logData                             Input sbgECom log data to write.
          */
@@ -182,7 +182,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_USBL
      */
-    class CLoggerEntryUsbl : public ILoggerEntry, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_USBL>
+    class CLoggerEntryUsbl : public IFileLogger, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_USBL>
     {
     public:
 
@@ -192,13 +192,13 @@ namespace sbg
 
         /*!
          * Returns the log name.
-         * 
+         *
          * \return                                          log name.
          */
         std::string getName() const override;
-        
+
     private:
-        
+
         //----------------------------------------------------------------------//
         //- Private methods                                                    -//
         //----------------------------------------------------------------------//
@@ -212,7 +212,7 @@ namespace sbg
 
         /*!
          * Write the data log to the file
-         * 
+         *
          * \param[in]   context                             Logger context and settings.
          * \param[in]   logData                             Input sbgECom log data to write.
          */
@@ -220,11 +220,65 @@ namespace sbg
 
         /*!
          * Write the data log to the console
-         * 
+         *
          * \param[in]   context                             Logger context and settings.
          * \param[in]   logData                             Input sbgECom log data to write.
          */
         void writeDataToConsole(const CLoggerContext &context, const SbgEComLogUnion &logData) override;
+    };
+
+    /*!
+     * Handle SBG_ECOM_LOG_VELOCITY_#
+     */
+    class CLoggerEntryVelocity : public IFileLogger
+    {
+    private:
+
+        //----------------------------------------------------------------------//
+        //- Private methods                                                    -//
+        //----------------------------------------------------------------------//
+
+        /*!
+         * Write the header to the file and/or console.
+         *
+         * \param[in]   context                             Logger context and settings.
+         */
+        void writeHeaderToFile(const CLoggerContext &context) override;
+
+        /*!
+         * Write the data log to the file
+         *
+         * \param[in]   context                             Logger context and settings.
+         * \param[in]   logData                             Input sbgECom log data to write.
+         */
+        void writeDataToFile(const CLoggerContext &context, const SbgEComLogUnion &logData) override;
+
+        /*!
+         * Write the data log to the console
+         *
+         * \param[in]   context                             Logger context and settings.
+         * \param[in]   logData                             Input sbgECom log data to write.
+         */
+        void writeDataToConsole(const CLoggerContext &context, const SbgEComLogUnion &logData) override;
+    };
+
+    /*!
+     * Handle SBG_ECOM_LOG_VELOCITY_1
+     */
+    class CLoggerEntryVelocity1 : public CLoggerEntryVelocity, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_VELOCITY_1>
+    {
+    public:
+
+        //----------------------------------------------------------------------//
+        //- Public getters                                                     -//
+        //----------------------------------------------------------------------//
+
+        /*!
+         * Returns the log name.
+         *
+         * \return                                          log name.
+         */
+        std::string getName() const override;
     };
 };
 

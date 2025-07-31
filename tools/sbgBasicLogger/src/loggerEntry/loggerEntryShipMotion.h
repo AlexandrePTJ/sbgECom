@@ -42,7 +42,7 @@ namespace sbg
     /*!
      * Generic Handle SBG_ECOM_LOG_SHIP_MOTION_##
      */
-    class CLoggerEntryShipMotion : public ILoggerEntry
+    class CLoggerEntryShipMotion : public IFileLogger
     {
     private:
         

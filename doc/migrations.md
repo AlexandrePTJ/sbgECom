@@ -142,6 +142,9 @@ The following new messages are available in this class:
   - `SBG_ECOM_LOG_NMEA_GNSS_RMC`
   - `SBG_ECOM_LOG_NMEA_GNSS_HDT`
   - `SBG_ECOM_LOG_NMEA_GNSS_VTG`
+  - `SBG_ECOM_LOG_NMEA_GNSS_ZDA`
+  - `SBG_ECOM_LOG_NMEA_GNSS_GSA`
+  - `SBG_ECOM_LOG_NMEA_GNSS_GST`
 
 These definitions have been added to support this new feature using the legacy sbgECom configuration commands.  
 Of course, SBG Systems recommends using the sbgInsRestApi for new code implementations.
@@ -205,6 +208,17 @@ New `sbgEComLogEkfEulerGetMagneticHeading` getter to return INS magnetic heading
 ### SBG_ECOM_LOG_IMU_SHORT
 Added a high range scale factor for gyroscopes to support rotation rates above 1833°/s
 Transparent if you use the getter `sbgEComLogImuShortGetDeltaAngle` otherwise, please use it.
+
+### SBG_ECOM_LOG_SHIP_MOTION and SBG_ECOM_LOG_SHIP_MOTION_HP
+
+The Ship Motion status bitmask has been cleaned up and improved for clarity and consistency:
+ - `SBG_ECOM_HEAVE_VALID` renamed to `SBG_ECOM_SHIP_MOTION_HEAVE_VALID`.
+ - `SBG_ECOM_HEAVE_VEL_AIDED` renamed to `SBG_ECOM_SHIP_MOTION_VEL_AIDED`.
+ - `SBG_ECOM_HEAVE_SURGE_SWAY_INCLUDED` renamed to `SBG_ECOM_SHIP_MOTION_SURGE_SWAY_VALID`.
+ - `SBG_ECOM_HEAVE_PERIOD_INCLUDED` has been deprecated and removed. Please use `SBG_ECOM_SHIP_MOTION_HEAVE_PERIOD_VALID` exclusively.
+ - `SBG_ECOM_HEAVE_PERIOD_VALID` renamed to `SBG_ECOM_SHIP_MOTION_HEAVE_PERIOD_VALID`.
+ - `SBG_ECOM_HEAVE_SWELL_MODE` renamed to `SBG_ECOM_SHIP_MOTION_SWELL_MODE`.
+ - `SBG_ECOM_SHIP_MOTION_ACCEL_VALID` has been added to indicate when `ACCEL_X`, `ACCEL_Y`, and `ACCEL_Z` accelerations are valid.
 
 ### Updated Output Triggers
 

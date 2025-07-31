@@ -1,12 +1,12 @@
 # Change Log
 This change log lists all modifications for each sbgECom library release.
 
-sbgECom C library change log issued on: 2025-02-17  
-Copyright (C) 2007-2025, SBG Systems SAS. All rights reserved.
+sbgECom C library change log issued on: 2025-06-23  
+Copyright (C) 2007-2024, SBG Systems SAS. All rights reserved.
 
 ## Release Summary
 
-The sbgECom 5.2.590-stable is a major release that supports the following products:
+The sbgECom 5.3.2276-stable is a major release that supports the following products:
  - **High Performance INS**: Firmware 5.x and above
  - **ELLIPSE v3**: Firmware 3.x and above
  - **ELLIPSE v1/v2**: Firmware 2.6 (legacy support)
@@ -31,6 +31,22 @@ Below are the key improvements and modifications in this release:
  - Added device info/settings streaming
  - Completely rewritten sbgECom protocol documentation
  - General code cleanup and improvements for better maintainability
+
+## Release - 5.3.2276-stable
+
+### New Features
+ - SBGECOM-479 - Doc: Add GSA NMEA frame
+ - SBGECOM-478 - Add GSA, ZDA, and GST NMEA frames in direct GNSS mode
+ - SBGECOM-476 - Implement a generic pager to handle messages split across multiple chunks
+ - SBGECOM-467 - Add generic 3D velocity aiding input/output log
+ - SBGECOM-464 - Add new logs for vibration analysis
+
+### Improvements
+ - SBGECOM-465 - Add SBG_ECOM_HEAVE_ACCEL_VALID and improved ship motion doc and defines
+
+### Bug Fixes
+ - SBGECOM-473 - Doc: Fix SBG_ECOM_LOG_GPSX_POS message payload size
+ - SBGECOM-472 - Doc: Fix SBG_ECOM_CMD_INFO message description
 
 ## Release - 5.2.590-stable
 

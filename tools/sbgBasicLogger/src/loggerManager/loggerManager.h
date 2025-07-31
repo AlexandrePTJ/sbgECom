@@ -5,7 +5,7 @@
  *
  * \brief           Basic logger implementation.
  *
- * \copyright       Copyright (C) 2007-2024, SBG Systems SAS. All rights reserved.
+ * \copyright       Copyright (C) 2007-2025, SBG Systems SAS. All rights reserved.
  * \beginlicense    Proprietary license
  *
  * This source code is intended for use only by SBG Systems SAS and
@@ -44,8 +44,6 @@
 
 namespace sbg
 {
-
-
     /*!
      * Basic logger manager implementation.
      *
@@ -75,9 +73,9 @@ namespace sbg
 
         /*!
          * Default constructor.
-         * 
+         *
          * \param[in]   settings                                    Logger settings to use.
-         * \throw                                                   std::runtime_error if 
+         * \throw                                                   std::runtime_error if
          */
         CLoggerManager(const CLoggerSettings &settings);
 
@@ -92,7 +90,7 @@ namespace sbg
 
         /*!
          * Register a new log handler.
-         * 
+         *
          * Example: registerLog<sbg::CLoggerEntryEventInA>();
          */
         template<typename T>
@@ -103,7 +101,7 @@ namespace sbg
 
         /*!
          * Process one incoming log from the interface.
-         * 
+         *
          * \return                                                  the stream status to check if we should stop the processing.
          */
         StreamStatus processOneLog();
@@ -115,7 +113,7 @@ namespace sbg
 
         /*!
          * Open the input interface according to configuration.
-         * 
+         *
          * \throw                                                   std::invalid_argument if the interface can't be opened.
          *                                                          std::logic_error if an other interface is already opened.
          */
@@ -155,9 +153,9 @@ namespace sbg
         //----------------------------------------------------------------------//
 
         /*!
-         * Typedef to store per sbgECom message ID the associated log handler. 
+         * Typedef to store per sbgECom message ID the associated log handler.
          */
-        typedef std::unordered_map<uint32_t, std::unique_ptr<ILoggerEntry>>     LogHandlers;
+        typedef std::unordered_map<uint32_t, std::unique_ptr<ILoggerBase>>      LogHandlers;
 
         //----------------------------------------------------------------------//
         //- Private members                                                    -//

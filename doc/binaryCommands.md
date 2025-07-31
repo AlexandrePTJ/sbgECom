@@ -141,14 +141,14 @@ If the command is received and processed successfully, the device should answer 
 
 | Field                       | Description                                                                       | Format | Size | Offset |
 |-----------------------------|-----------------------------------------------------------------------------------|--------|------|--------|
-| productCode                 | The device product code such as ELLIPSE-D-G4A3-B1                                 | string |  32  |    0   |
-| serialNumber                | The device unique serial number                                                   | uint32 |   4  |   32   |
+| productCode                 | The device product code such as ELLIPSE-D-G4A3-B1.                                | string |  32  |    0   |
+| serialNumber                | The device unique serial number.                                                  | uint32 |   4  |   32   |
 | mnfVersion                  | Procedure and tools version used to manufacture and validate the product.         | uint32 |   4  |   36   |
-| mnfYear                     | The device product code such as ELLIPSE-D-G4A3-B1                                 | uint16 |   2  |   40   |
-| mnfMonth                    | The device product code such as ELLIPSE-D-G4A3-B1                                 | uint8  |   1  |   42   |
-| mnfDay                      | The device product code such as ELLIPSE-D-G4A3-B1                                 | uint8  |   1  |   43   |
-| hwRevision                  | The device hardware revision (Major.Minor.0.0)                                    | uint32 |   4  |   44   |
-| swRevision                  | The device firmware version using                                                 | uint32 |   4  |   48   |
+| mnfYear                     | Year the product was manufactured.                                                | uint16 |   2  |   40   |
+| mnfMonth                    | Month the product was manufactured.                                               | uint8  |   1  |   42   |
+| mnfDay                      | Day the product was manufactured.                                                 | uint8  |   1  |   43   |
+| hwRevision                  | The device hardware revision (Major.Minor.0.0).                                   | uint32 |   4  |   44   |
+| swRevision                  | The device firmware version using.                                                | uint32 |   4  |   48   |
 
 The productCode field is a NULL terminated C String. All versions fields should be interpreted as described in this [section](#VERSION_TYPE).
 

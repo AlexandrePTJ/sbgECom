@@ -164,7 +164,7 @@ std::string CLoggerEntryGnssRaw::getFileName() const
 	return getName() + ".bin";
 }
 
-bool CLoggerEntryGnssRaw::isBinary() const
+bool CLoggerEntryGnssRaw::isBinaryFile() const
 {
 	return true;
 }

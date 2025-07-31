@@ -128,9 +128,7 @@ typedef enum _SbgEComCanBusStatus
 #define SBG_ECOM_AIDING_USBL_RECV               (0x00000001u << 11)     /*!< Set to 1 when valid USBL data is received. */
 #define SBG_ECOM_AIDING_DEPTH_RECV              (0x00000001u << 12)     /*!< Set to 1 when valid Depth Log data is received. */
 #define SBG_ECOM_AIDING_AIR_DATA_RECV           (0x00000001u << 13)     /*!< Set to 1 when valid Air Data (altitude and/or true airspeed) is received. */
-#define SBG_ECOM_AIDING_USER_POS_RECV           (0x00000001u << 14)     /*!< Set to 1 when valid user position data is received. */
-#define SBG_ECOM_AIDING_USER_VEL_RECV           (0x00000001u << 15)     /*!< Set to 1 when valid user velocity data is received. */
-#define SBG_ECOM_AIDING_USER_HEADING_RECV       (0x00000001u << 16)     /*!< Set to 1 when valid user heading data is received. */
+#define SBG_ECOM_AIDING_VEL1_RECV               (0x00000001u << 14)     /*!< Set to 1 when valid generic velocity 1 data is received. */
 
 //----------------------------------------------------------------------//
 //- Status definitions                                                 -//
@@ -158,7 +156,7 @@ typedef struct _SbgEComLogStatus
 
 /*!
  * Parse data for the SBG_ECOM_LOG_STATUS message and fill the corresponding structure.
- * 
+ *
  * \param[out]  pLogData                    Log structure instance to fill.
  * \param[in]   pStreamBuffer               Input stream buffer to read the log from.
  * \return                                  SBG_NO_ERROR if a valid log has been read from the stream buffer.
@@ -180,7 +178,7 @@ SbgErrorCode sbgEComLogStatusWriteToStream(const SbgEComLogStatus *pLogData, Sbg
 
 /*!
  * Defines the CAN bus status.
- * 
+ *
  * \param[out]  pLogData                    Log status instance.
  * \param[in]   status                      CAN bus status to set.
  */
@@ -196,7 +194,7 @@ SbgEComCanBusStatus sbgEComLogStatusGetCanBusStatus(const SbgEComLogStatus *pLog
 
 /*!
  * Returns true if the CPU usage in percent is available.
- * 
+ *
  * \param[in]   pLogData                    Log status instance.
  * \return                                  true if available.
  */

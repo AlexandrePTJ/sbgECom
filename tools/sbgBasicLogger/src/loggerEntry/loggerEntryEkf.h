@@ -38,7 +38,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_EKF_EULER
      */
-    class CLoggerEntryEkfEuler : public ILoggerEntry, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_EKF_EULER>
+    class CLoggerEntryEkfEuler : public IFileLogger, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_EKF_EULER>
     {
     public:
 
@@ -86,7 +86,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_EKF_QUAT
      */
-    class CLoggerEntryEkfQuat : public ILoggerEntry, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_EKF_QUAT>
+    class CLoggerEntryEkfQuat : public IFileLogger, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_EKF_QUAT>
     {
     public:
 
@@ -134,7 +134,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_EKF_NAV
      */
-    class CLoggerEntryEkfNav : public ILoggerEntry, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_EKF_NAV>
+    class CLoggerEntryEkfNav : public IFileLogger, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_EKF_NAV>
     {
     public:
 
@@ -182,7 +182,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_EKF_VEL_BODY
      */
-    class CLoggerEntryEkfVelBody : public ILoggerEntry, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_EKF_VEL_BODY>
+    class CLoggerEntryEkfVelBody : public IFileLogger, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_EKF_VEL_BODY>
     {
     public:
 

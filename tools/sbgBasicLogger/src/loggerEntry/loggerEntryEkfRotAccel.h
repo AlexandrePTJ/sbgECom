@@ -38,7 +38,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_EKF_ROT_ACCEL_BODY
      */
-    class CLoggerEntryEkfRotAccelBody : public ILoggerEntry, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_EKF_ROT_ACCEL_BODY>
+    class CLoggerEntryEkfRotAccelBody : public IFileLogger, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_EKF_ROT_ACCEL_BODY>
     {
     public:
 
@@ -86,7 +86,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_EKF_ROT_ACCEL_NED
      */
-    class CLoggerEntryEkfRotAccelNed : public ILoggerEntry, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_EKF_ROT_ACCEL_NED>
+    class CLoggerEntryEkfRotAccelNed : public IFileLogger, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_EKF_ROT_ACCEL_NED>
     {
     public:
 

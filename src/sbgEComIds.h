@@ -8,7 +8,7 @@
  *
  * \copyright       Copyright (C) 2007-2024, SBG Systems SAS. All rights reserved.
  * \beginlicense    The MIT license
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -26,7 +26,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  * \endlicense
  */
 
@@ -53,13 +53,13 @@ typedef enum _SbgEComClass
 
     SBG_ECOM_CLASS_LOG_NMEA_0           = 0x02,         /*!< Class that contains standard NMEA messages such as GGA/RMC/ZDA produced from the INS filer. */
     SBG_ECOM_CLASS_LOG_NMEA_1           = 0x03,         /*!< Class that contains proprietary NMEA (and NMEA like) output logs. */
-    
+
     SBG_ECOM_CLASS_LOG_THIRD_PARTY_0    = 0x04,         /*!< Class that contains third party output logs using mostly binary protocols. */
-    
+
     SBG_ECOM_CLASS_LOG_NMEA_GNSS        = 0x05,         /*!< Class that contains standard NMEA messages such as GGA/RMC/ZDA but produced from the internal GNSS data. */
 
     SBG_ECOM_CLASS_LOG_CMD_0            = 0x10,         /*!< Class that contains sbgECom protocol commands. */
-    
+
 
     SBG_ECOM_CLASS_LOG_ALL              = 0xFF          /*!< Special value to represents all message classes. */
 } SbgEComClass;
@@ -141,6 +141,11 @@ typedef enum _SbgEComLog
 
     SBG_ECOM_LOG_PTP_STATUS                 = 57,       /*!< PTP status. */
 
+    SBG_ECOM_LOG_VELOCITY_1                 = 58,       /*!< Generic velocity 1 log. */
+
+    SBG_ECOM_LOG_VIB_MON_FFT                = 59,       /*!< Vibration monitoring FFT data for post processing. */
+    SBG_ECOM_LOG_VIB_MON_REPORT             = 60,       /*!< Vibration monitoring report information. */
+
     SBG_ECOM_LOG_ECOM_NUM_MESSAGES                      /*!< Helper definition to know the number of ECom messages */
 } SbgEComLog;
 
@@ -167,7 +172,8 @@ typedef enum _SbgEComNmeaLog
     SBG_ECOM_LOG_NMEA_DPT                   = 7,        /*!< Depth sensor output. */
     SBG_ECOM_LOG_NMEA_VTG                   = 8,        /*!< Track an Speed over the ground. */
     SBG_ECOM_LOG_NMEA_RTO                   = 9,        /*!< Rate and direction of turn. */
-    SBG_ECOM_LOG_NMEA_GSV                   = 10,       /*!< GNSS Satellites in View with azimuth, elevation and SNR information */
+    SBG_ECOM_LOG_NMEA_GSV                   = 10,       /*!< GNSS Satellites in View with azimuth, elevation and SNR information. */
+    SBG_ECOM_LOG_NMEA_GSA                   = 11,       /*!< GNSS DOP and active satellites. */
     SBG_ECOM_LOG_NMEA_NUM_MESSAGES                      /*!< Helper definition to know the number of NMEA messages */
 } SbgEComNmeaLog;
 
@@ -228,8 +234,11 @@ typedef enum _SbgEComNmeaGnssLog
 {
     SBG_ECOM_LOG_NMEA_GNSS_GGA              = 0,        /*!< Latitude, Longitude, Altitude, Quality indicator. */
     SBG_ECOM_LOG_NMEA_GNSS_RMC              = 1,        /*!< Latitude, Longitude, velocity, course over ground. */
+    SBG_ECOM_LOG_NMEA_GNSS_ZDA              = 2,        /*!< UTC Time. */
     SBG_ECOM_LOG_NMEA_GNSS_HDT              = 3,        /*!< Heading (True). */
+    SBG_ECOM_LOG_NMEA_GNSS_GST              = 4,        /*!< GPS Pseudorange Noise Statistics. */
     SBG_ECOM_LOG_NMEA_GNSS_VTG              = 8,        /*!< Track an Speed over the ground. */
+    SBG_ECOM_LOG_NMEA_GNSS_GSA              = 11,       /*!< GNSS DOP and active satellites. */
 } SbgEComNmeaGnssLog;
 
 

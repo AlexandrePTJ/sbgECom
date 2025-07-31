@@ -5,11 +5,11 @@
  * \date            December 20, 2023
  *
  * \brief           Session information management.
- * 
+ *
  * Session information, including device information and current settings, may
  * be sent regularly by a device. This module handles the reassembly of that
  * information for the convenience of the user.
- * 
+ *
  * \copyright       Copyright (C) 2007-2024, SBG Systems SAS. All rights reserved.
  * \beginlicense    The MIT license
  *
@@ -45,6 +45,9 @@
 // sbgCommonLib headers
 #include <sbgCommon.h>
 
+// Project headers
+#include <pager/sbgEComPager.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -70,9 +73,8 @@ extern "C" {
 typedef struct _SbgEComSessionInfoCtx
 {
     char                                 string[SBG_ECOM_SESSION_INFO_BUFFER_SIZE]; /*!< Session information string. */
-    size_t                               length;                                    /*!< Session information string length, in bytes. */
-    uint16_t                             pageIndex;                                 /*!< Page index. */
-    uint16_t                             nrPages;                                   /*!< Total number of pages. */
+
+    SbgEComPager                         pager;                                     /*!< Pager. */
 } SbgEComSessionInfoCtx;
 
 //----------------------------------------------------------------------//

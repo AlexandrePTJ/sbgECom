@@ -88,6 +88,9 @@ It briefly describe which parameters are contained in each output log.
 | [SBG_ECOM_LOG_RTCM_RAW (49)](#SBG_ECOM_LOG_RTCM_RAW)                     | RTCM/NTRIP RAW data stream that can be used in post-processing                         |
 | [SBG_ECOM_LOG_SESSION_INFO (55)](#SBG_ECOM_LOG_SESSION_INFO)             | Session information, including device information and current settings.                |
 | [SBG_ECOM_LOG_PTP_STATUS (57)](#SBG_ECOM_LOG_PTP_STATUS)                 | Precise Time Protocol (PTP) status and metric values.                                  |
+| [SBG_ECOM_LOG_VELOCITY_1 (58)](#SBG_ECOM_LOG_VELOCITY_X)                 | Generic 1D, 2D or 3D velocity aiding measurement.                                      |
+| [SBG_ECOM_LOG_VIB_MON_FFT (59)](#SBG_ECOM_LOG_VIB_MON_FFT)               | Vibration monitoring FFT spectrum magnitudes.                                          |
+| [SBG_ECOM_LOG_VIB_MON_REPORT (60)](#SBG_ECOM_LOG_VIB_MON_REPORT)         | Vibration monitoring summary report with computed metrics.                             |
 
 ## Messages Availability
 
@@ -319,22 +322,23 @@ Provide additional status on interfaces such as Ethernet.
 
 Tells which aiding data is received.
 
-| Bit | Name                           | Type | Description                                              |
-|-----|--------------------------------|------|----------------------------------------------------------|
-| 0   | SBG_ECOM_AIDING_GPS1_POS_RECV  | Mask | Set to 1 when valid GPS 1 position data is received      |
-| 1   | SBG_ECOM_AIDING_GPS1_VEL_RECV  | Mask | Set to 1 when valid GPS 1 velocity data is received      |
-| 2   | SBG_ECOM_AIDING_GPS1_HDT_RECV  | Mask | Set to 1 when valid GPS 1 true heading data is received  |
-| 3   | SBG_ECOM_AIDING_GPS1_UTC_RECV  | Mask | Set to 1 when valid GPS 1 UTC time data is received      |
-| 4   | SBG_ECOM_AIDING_GPS2_POS_RECV  | Mask | Set to 1 when valid GPS 2 position data is received      |
-| 5   | SBG_ECOM_AIDING_GPS2_VEL_RECV  | Mask | Set to 1 when valid GPS 2 velocity data is received      |
-| 6   | SBG_ECOM_AIDING_GPS2_HDT_RECV  | Mask | Set to 1 when valid GPS 2 true heading data is received  |
-| 7   | SBG_ECOM_AIDING_GPS2_UTC_RECV  | Mask | Set to 1 when valid GPS 2 UTC time data is received      |
-| 8   | SBG_ECOM_AIDING_MAG_RECV       | Mask | Set to 1 when valid Magnetometer data is received        |
-| 9   | SBG_ECOM_AIDING_ODO_RECV       | Mask | Set to 1 when Odometer pulse is received                 |
-| 10  | SBG_ECOM_AIDING_DVL_RECV       | Mask | Set to 1 when valid DVL data is received                 |
-| 11  | SBG_ECOM_AIDING_USBL_RECV      | Mask | Set to 1 when valid USBL data is received                |
-| 12  | SBG_ECOM_AIDING_DEPTH_RECV     | Mask | Set to 1 when valid Depth sensor data is received        |
-| 13  | SBG_ECOM_AIDING_AIR_DATA_RECV  | Mask | Set to 1 when valid altitude and/or airspeed is received |
+| Bit | Name                          | Type | Description                                              |
+| --- | ----------------------------- | ---- | -------------------------------------------------------- |
+| 0   | SBG_ECOM_AIDING_GPS1_POS_RECV | Mask | Set to 1 when valid GPS 1 position data is received      |
+| 1   | SBG_ECOM_AIDING_GPS1_VEL_RECV | Mask | Set to 1 when valid GPS 1 velocity data is received      |
+| 2   | SBG_ECOM_AIDING_GPS1_HDT_RECV | Mask | Set to 1 when valid GPS 1 true heading data is received  |
+| 3   | SBG_ECOM_AIDING_GPS1_UTC_RECV | Mask | Set to 1 when valid GPS 1 UTC time data is received      |
+| 4   | SBG_ECOM_AIDING_GPS2_POS_RECV | Mask | Set to 1 when valid GPS 2 position data is received      |
+| 5   | SBG_ECOM_AIDING_GPS2_VEL_RECV | Mask | Set to 1 when valid GPS 2 velocity data is received      |
+| 6   | SBG_ECOM_AIDING_GPS2_HDT_RECV | Mask | Set to 1 when valid GPS 2 true heading data is received  |
+| 7   | SBG_ECOM_AIDING_GPS2_UTC_RECV | Mask | Set to 1 when valid GPS 2 UTC time data is received      |
+| 8   | SBG_ECOM_AIDING_MAG_RECV      | Mask | Set to 1 when valid Magnetometer data is received        |
+| 9   | SBG_ECOM_AIDING_ODO_RECV      | Mask | Set to 1 when Odometer pulse is received                 |
+| 10  | SBG_ECOM_AIDING_DVL_RECV      | Mask | Set to 1 when valid DVL data is received                 |
+| 11  | SBG_ECOM_AIDING_USBL_RECV     | Mask | Set to 1 when valid USBL data is received                |
+| 12  | SBG_ECOM_AIDING_DEPTH_RECV    | Mask | Set to 1 when valid Depth sensor data is received        |
+| 13  | SBG_ECOM_AIDING_AIR_DATA_RECV | Mask | Set to 1 when valid altitude and/or airspeed is received |
+| 14  | SBG_ECOM_AIDING_VEL1_RECV     | Mask | Set to 1 when valid generic velocity 1 data is received  |
 
 ### SBG_ECOM_LOG_UTC_TIME (02) {#SBG_ECOM_LOG_UTC_TIME}
 
@@ -692,30 +696,33 @@ Furthermore, the effects of Earth's gravity and rotation rate are also removed, 
 
 This status provides information about the Extended Kalman Filter (EKF), indicating which aiding data is used and the current solution mode.
 
-| Bit   | Name                          | Description                                                                        |
-|-------|-------------------------------|------------------------------------------------------------------------------------|
-| [0-3] | SBG_ECOM_SOLUTION_MODE        | Indicates the Kalman filter computation mode (see [SOLUTION_MODE](#SOLUTION_MODE)) |
-|   4   | SBG_ECOM_SOL_ATTITUDE_VALID   | Set if attitude data is reliable (Roll/Pitch error within defined criteria).       |
-|   5   | SBG_ECOM_SOL_HEADING_VALID    | Set if heading data is reliable (Heading error within defined criteria).           |
-|   6   | SBG_ECOM_SOL_VELOCITY_VALID   | Set if velocity data is reliable (Velocity error within defined criteria).         |
-|   7   | SBG_ECOM_SOL_POSITION_VALID   | Set if position data is reliable (Position error within defined criteria).         |
-|   8   | SBG_ECOM_SOL_VERT_REF_USED    | Set if the vertical reference is used in the solution.                             |
-|   9   | SBG_ECOM_SOL_MAG_REF_USED     | Set if magnetometer is used in the solution.                                       |
-|  10   | SBG_ECOM_SOL_GPS1_VEL_USED    | Set if GNSS 1 velocity is used in the solution.                                    |
-|  11   | SBG_ECOM_SOL_GPS1_POS_USED    | Set if GNSS 1 position is used in the solution.                                    |
-|  13   | SBG_ECOM_SOL_GPS1_HDT_USED    | Set if GNSS 1 true heading is used in the solution.                                |
-|  14   | SBG_ECOM_SOL_GPS2_VEL_USED    | Set if GNSS 2 velocity is used in the solution.                                    |
-|  15   | SBG_ECOM_SOL_GPS2_POS_USED    | Set if GNSS 2 position is used in the solution.                                    |
-|  17   | SBG_ECOM_SOL_GPS2_HDT_USED    | Set if GNSS 2 true heading is used in the solution.                                |
-|  18   | SBG_ECOM_SOL_ODO_USED         | Set if odometer velocity is used in the solution.                                  |
-|  19   | SBG_ECOM_SOL_DVL_BT_USED      | Set if DVL bottom tracking velocity is used in the solution.                       |
-|  20   | SBG_ECOM_SOL_DVL_WT_USED      | Set if DVL water layer velocity is used in the solution.                           |
-|  24   | SBG_ECOM_SOL_USBL_USED        | Set if USBL position is used in the solution.                                      |
-|  25   | SBG_ECOM_SOL_AIR_DATA_USED    | Set if altitude or true airspeed is used in the solution.                          |
-|  26   | SBG_ECOM_SOL_ZUPT_USED        | Set if a Zero Velocity Update (ZUPT) is is used in the solution.                   |
-|  27   | SBG_ECOM_SOL_ALIGN_VALID      | Set if sensor alignment and residual sensors errors have fully converged.          |
-|  28   | SBG_ECOM_SOL_DEPTH_USED       | Set if depth sensor is used in the solution (subsea navigation).                   |
-|  29   | SBG_ECOM_SOL_ZARU_USED        | Set if a Zero Angular Rate Update (ZARU) is used in the solution.                  |
+| Bit   | Name                        | Description                                                                        |
+| ----- | --------------------------- | ---------------------------------------------------------------------------------- |
+| [0-3] | SBG_ECOM_SOLUTION_MODE      | Indicates the Kalman filter computation mode (see [SOLUTION_MODE](#SOLUTION_MODE)) |
+| 4     | SBG_ECOM_SOL_ATTITUDE_VALID | Set if attitude data is reliable (Roll/Pitch error within defined criteria).       |
+| 5     | SBG_ECOM_SOL_HEADING_VALID  | Set if heading data is reliable (Heading error within defined criteria).           |
+| 6     | SBG_ECOM_SOL_VELOCITY_VALID | Set if velocity data is reliable (Velocity error within defined criteria).         |
+| 7     | SBG_ECOM_SOL_POSITION_VALID | Set if position data is reliable (Position error within defined criteria).         |
+| 8     | SBG_ECOM_SOL_VERT_REF_USED  | Set if the vertical reference is used in the solution.                             |
+| 9     | SBG_ECOM_SOL_MAG_REF_USED   | Set if magnetometer is used in the solution.                                       |
+| 10    | SBG_ECOM_SOL_GPS1_VEL_USED  | Set if GNSS 1 velocity is used in the solution.                                    |
+| 11    | SBG_ECOM_SOL_GPS1_POS_USED  | Set if GNSS 1 position is used in the solution.                                    |
+| 13    | SBG_ECOM_SOL_GPS1_HDT_USED  | Set if GNSS 1 true heading is used in the solution.                                |
+| 14    | SBG_ECOM_SOL_GPS2_VEL_USED  | Set if GNSS 2 velocity is used in the solution.                                    |
+| 15    | SBG_ECOM_SOL_GPS2_POS_USED  | Set if GNSS 2 position is used in the solution.                                    |
+| 17    | SBG_ECOM_SOL_GPS2_HDT_USED  | Set if GNSS 2 true heading is used in the solution.                                |
+| 18    | SBG_ECOM_SOL_ODO_USED       | Set if odometer velocity is used in the solution.                                  |
+| 19    | SBG_ECOM_SOL_DVL_BT_USED    | Set if DVL bottom tracking velocity is used in the solution.                       |
+| 20    | SBG_ECOM_SOL_DVL_WT_USED    | Set if DVL water layer velocity is used in the solution.                           |
+| 21    | SBG_ECOM_SOL_VEL1_USED      | Set if generic velocity 1 is used in the solution.                                 |
+| 22    | Reserved                    | Reserved for future use.                                                           |
+| 23    | Reserved                    | Reserved for future use.                                                           |
+| 24    | SBG_ECOM_SOL_USBL_USED      | Set if USBL position is used in the solution.                                      |
+| 25    | SBG_ECOM_SOL_AIR_DATA_USED  | Set if altitude or true airspeed is used in the solution.                          |
+| 26    | SBG_ECOM_SOL_ZUPT_USED      | Set if a Zero Velocity Update (ZUPT) is is used in the solution.                   |
+| 27    | SBG_ECOM_SOL_ALIGN_VALID    | Set if sensor alignment and residual sensors errors have fully converged.          |
+| 28    | SBG_ECOM_SOL_DEPTH_USED     | Set if depth sensor is used in the solution (subsea navigation).                   |
+| 29    | SBG_ECOM_SOL_ZARU_USED      | Set if a Zero Angular Rate Update (ZARU) is used in the solution.                  |
 
 #### SOLUTION_MODE {#SOLUTION_MODE}
 
@@ -903,32 +910,37 @@ Ship motion measurements are defined in a vessel-specific coordinate frame:
 - **Surge**: Longitudinal displacement (positive toward the bow/forward).
 - **Sway**: Transverse displacement (positive toward the starboard side/right).
 
-The heave measurements are affected by the selected output monitoring point and will be re-located accordingly.  
-However, surge/sway/velocity and accelerations values are only valid when output at the IMU monitoring point.
+The heave measurement and vertical velocity (`HEAVE` and `VEL_Z` fields) are affected by the selected output monitoring point and will be re-located accordingly.  
+However, surge/sway, horizontal velocities and accelerations values are **only valid** when output at the IMU physical measurement point (Bare IMU).
 
 ### Ship Motion Status {#SHIP_MOTION_STATUS}
 
 The status field indicates the validity and availability of the ship motion output fields.  
 It is crucial to check this status to determine which fields are active and if the data is valid.
 
-| Bit | Name                               | Description                                                                     |
-|-----|------------------------------------|---------------------------------------------------------------------------------|
-| 0   | SBG_ECOM_HEAVE_VALID               | Set if heave has stabilized (see [SBG_ECOM_HEAVE_VALID](#SBG_ECOM_HEAVE_VALID)) |
-| 1   | SBG_ECOM_HEAVE_VEL_AIDED           | Set if the heave output is compensated for transient accelerations              |
-| 2   | SBG_ECOM_HEAVE_SURGE_SWAY_INCLUDED | Set if surge and sway components are included in this output                    |
-| 3   | SBG_ECOM_HEAVE_PERIOD_INCLUDED     | Set if the swell period is provided                                             |
-| 4   | SBG_ECOM_HEAVE_PERIOD_VALID        | Set if the swell period data is valid                                           |
-| 5   | SBG_ECOM_HEAVE_SWELL_MODE          | Set if real-time heave uses swell mode computations                             |
+| Bit | Name                                    | Description                                                                                                     |
+|-----|-----------------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| 0   | SBG_ECOM_SHIP_MOTION_HEAVE_VALID        | Set if heave filter has stabilized (see [SBG_ECOM_SHIP_MOTION_HEAVE_VALID](#SBG_ECOM_SHIP_MOTION_HEAVE_VALID)). |
+| 1   | SBG_ECOM_SHIP_MOTION_VEL_AIDED          | Set if the heave output is compensated for transient accelerations.                                             |
+| 2   | SBG_ECOM_SHIP_MOTION_SURGE_SWAY_VALID   | Set if `SURGE`, `SWAY`, `VEL_X` and `VEL_Y` components are valid and reported in this output.                   |
+| 4   | SBG_ECOM_SHIP_MOTION_HEAVE_PERIOD_VALID | Set if `HEAVE_PERIOD`, the main wave or swell period is available and valid.                                    |
+| 5   | SBG_ECOM_SHIP_MOTION_SWELL_MODE         | Set if the heave filter is operating in swell computation mode.                                                 |
+| 6   | SBG_ECOM_SHIP_MOTION_ACCEL_VALID        | Set if `ACCEL_X`, `ACCEL_Y`, and `ACCEL_Z` accelerations are valid and available.                               |
 
-#### SBG_ECOM_HEAVE_VALID flag {#SBG_ECOM_HEAVE_VALID}
+#### SBG_ECOM_SHIP_MOTION_HEAVE_VALID flag {#SBG_ECOM_SHIP_MOTION_HEAVE_VALID}
 
-The `SBG_ECOM_HEAVE_VALID` flag indicates whether the heave measurement is valid and stable, as it relies on high-pass filtering that requires convergence.  
-This flag is cleared under the following conditions:
-  - At startup or before convergence
-  - After a turn occurs without velocity aiding
-  - When heave measurements reach extreme values
-  - If a significant step occurs, necessitating filter re-convergence
-  - In the event of an internal system failure
+The `SBG_ECOM_SHIP_MOTION_HEAVE_VALID` flag indicates whether the heave measurement is valid and stable.  
+When this flag is set, the `HEAVE` and `VEL_Z` outputs contain reliable data.
+
+The heave estimation relies on a high-pass filter, which requires a convergence period and has a settling time.  
+As with any complex filter, certain events can destabilize it and require re-convergence.
+
+This flag is **cleared** under the following conditions:
+  - At startup, or before the filter has converged
+  - Following a vessel turn without velocity aiding
+  - When heave measurements reach extreme or invalid values
+  - After a sudden step change that requires the filter to re-converge
+  - In the event of an internal system error
 
 ### SBG_ECOM_LOG_SHIP_MOTION (09) {#SBG_ECOM_LOG_SHIP_MOTION}
 
@@ -945,21 +957,21 @@ This log provides real-time ship motion data, including main heave period, surge
 | HEAVE_PERIOD  | Main heave period                                                         | s     | float  | 4    | 4      |
 | SURGE         | Surge longitudinal displacement (positive forward)                        | m     | float  | 4    | 8      |
 | SWAY          | Sway lateral displacement (positive right)                                | m     | float  | 4    | 12     |
-| HEAVE         | Heave vertical displacement (positive down)                               | m     | float  | 4    | 16     |
+| HEAVE         | Heave vertical displacement (positive downward)                           | m     | float  | 4    | 16     |
 | ACCEL_X       | Longitudinal acceleration (positive forward)                              | m/s²  | float  | 4    | 20     |
 | ACCEL_Y       | Lateral acceleration (positive right)                                     | m/s²  | float  | 4    | 24     |
-| ACCEL_Z       | Vertical acceleration (positive down)                                     | m/s²  | float  | 4    | 28     |
+| ACCEL_Z       | Vertical acceleration (positive downward)                                 | m/s²  | float  | 4    | 28     |
 | VEL_X         | Longitudinal velocity (positive forward)                                  | m/s   | float  | 4    | 32     |
 | VEL_Y         | Lateral velocity (positive right)                                         | m/s   | float  | 4    | 36     |
-| VEL_Z         | Vertical velocity (positive down)                                         | m/s   | float  | 4    | 40     |
-| STATUS        | Ship motion output status (see [SHIP_MOTION_STATUS](#SHIP_MOTION_STATUS)) | -     | uint32 | 4    | 28     |
+| VEL_Z         | Vertical velocity (positive downward)                                     | m/s   | float  | 4    | 40     |
+| STATUS        | Ship motion output status (see [SHIP_MOTION_STATUS](#SHIP_MOTION_STATUS)) | -     | uint16 | 2    | 44     |
 
 > [!NOTE]
 > ELLIPSE series only computes and outputs HEAVE_PERIOD, HEAVE, ACCEL_Z and VEL_Z values.  
 > All other fields are set to zero and reported as invalid in the `STATUS` bitmask.
 
 > [!WARNING]
-> Surge, sway, velocities and accelerations values are only valid when output at the IMU monitoring point.
+> Surge, sway, X/Y velocities, and acceleration values are only valid when measured at the IMU's physical location (Bare IMU).
 
 ### SBG_ECOM_LOG_SHIP_MOTION_HP (32) {#SBG_ECOM_LOG_SHIP_MOTION_HP}
 
@@ -979,21 +991,21 @@ The data corresponds to conditions roughly 150 seconds earlier than other logs t
 | HEAVE_PERIOD  | Reserved for future use. Always reported as 0                             | s     | float  | 4    | 4      |
 | SURGE         | Reserved for future use. Always reported as 0                             | m     | float  | 4    | 8      |
 | SWAY          | Reserved for future use. Always reported as 0                             | m     | float  | 4    | 12     |
-| HEAVE         | Heave vertical displacement (positive down)                               | m     | float  | 4    | 16     |
-| ACCEL_X       | Reserved for future use. Always reported as 0                             | m/s²  | float  | 4    | 20     |
-| ACCEL_Y       | Reserved for future use. Always reported as 0                             | m/s²  | float  | 4    | 24     |
-| ACCEL_Z       | Vertical acceleration (positive down)                                     | m/s²  | float  | 4    | 28     |
+| HEAVE         | Heave vertical displacement (positive downward)                           | m     | float  | 4    | 16     |
+| ACCEL_X       | Longitudinal acceleration (positive forward)                              | m/s²  | float  | 4    | 20     |
+| ACCEL_Y       | Lateral acceleration (positive right)                                     | m/s²  | float  | 4    | 24     |
+| ACCEL_Z       | Vertical acceleration (positive downward)                                 | m/s²  | float  | 4    | 28     |
 | VEL_X         | Reserved for future use. Always reported as 0                             | m/s   | float  | 4    | 32     |
 | VEL_Y         | Reserved for future use. Always reported as 0                             | m/s   | float  | 4    | 36     |
-| VEL_Z         | Vertical velocity (positive down)                                         | m/s   | float  | 4    | 40     |
-| STATUS        | Ship motion output status (see [SHIP_MOTION_STATUS](#SHIP_MOTION_STATUS)) | -     | uint32 | 4    | 28     |
+| VEL_Z         | Vertical velocity (positive downward)                                     | m/s   | float  | 4    | 40     |
+| STATUS        | Ship motion output status (see [SHIP_MOTION_STATUS](#SHIP_MOTION_STATUS)) | -     | uint16 | 2    | 44     |
 
 > [!NOTE]
 > The `SBG_ECOM_LOG_SHIP_MOTION_HP` message only computes and outputs delayed heave, vertical velocity and acceleration.  
 > All other fields are reported as 0 and the `STATUS` bitmask is set accordingly.
 
 > [!WARNING]
-> Vertical velocity and acceleration are only valid when output at the IMU monitoring point.
+> Acceleration values are only valid when measured at the IMU's physical location (Bare IMU).
 ## GNSS aiding (PVT, HDT)
 
 The following logs provide the navigation unit's output, including Euler angles, quaternions, velocity and position.  
@@ -1065,7 +1077,7 @@ The timestamp indicates the actual GPS position data time, not synchronized with
 - **Message Name (ID):** `SBG_ECOM_LOG_GPS1_POS (14)`, `SBG_ECOM_LOG_GPS2_POS (17)`
 - **Compatibility:** INS capable products
 - **Firmware:** ![ELLIPSE](https://img.shields.io/badge/ELLIPSE-1.0-blue) ![HPINS](https://img.shields.io/badge/HPINS-1.0-blue)
-- **Payload Size:** 59 bytes
+- **Payload Size:** 62 bytes
 
 | Field           | Description                                                                                | Unit  | Format  | Size | Offset |
 |-----------------|--------------------------------------------------------------------------------------------|-------|---------|------|--------|
@@ -1549,6 +1561,71 @@ The timestamp indicates the actual time of the positioning data, rather than bei
 > [!NOTE]
 > USBL aiding is not currently supported by the INS filter.
 > However, the unit can accept external USBL aiding data and log it for later post-processing.
+
+### SBG_ECOM_LOG_VELOCITY_X {#SBG_ECOM_LOG_VELOCITY_X}
+
+This log provides 1D, 2D, or 3D velocity aiding information.
+
+This log serves both as an input and output:
+ - It is used to inject external velocity aiding information into the INS.
+ - The unit can send this log when new velocity information is received and processed.
+
+**Velocity Frame**
+
+The INS can utilize 1D, 2D, or 3D velocity information to enhance navigation performance, particularly during dead reckoning periods.
+
+The velocity can be expressed in either:
+ - The vehicle body frame (X/Y/Z)
+ - The INS navigation frame (North, East, Down)
+  
+The velocity frame convention is determined by the generic velocity aiding error model configuration.
+ - When body velocity is used, a 1D, 2D, or 3D velocity can be provided using the `VELOCITY_STATUS` bitmask.
+ - When navigation frame velocity is used, all three components (North, East, Down) must be supplied.
+
+**Timestamp Considerations:**
+When used as an input for external velocity aiding, the `TIME_STAMP` field can represent:
+ - The INS internal time since the INS was powered up (in µs).
+ - A measurement delay to apply on the message reception and processing time (in µs).
+ - A GPS time of the week (in ms).
+
+You can control the type of supplied time with the `VELOCITY_STATUS` field.
+
+> [!NOTE]
+> The output velocity aiding message always uses the INS internal timestamp (in µs since the sensor power-up) to comply with other sbgECom output logs.
+
+- **Message Name (ID):** `SBG_ECOM_LOG_VELOCITY_1 (58)`
+- **Compatibility:** INS capable products
+- **Firmware:** ![ELLIPSE](https://img.shields.io/badge/ELLIPSE-3.1-blue) ![HPINS](https://img.shields.io/badge/HPINS-5.5-blue)
+- **Payload Size:** 30 bytes
+
+| Field           | Description                                                       | Unit     | Format | Size | Offset |
+| --------------- | ----------------------------------------------------------------- | -------- | ------ | ---- | ------ |
+| TIME_STAMP      | Time since the INS was powered up or delay or GPS TOW.            | µs or ms | uint32 | 4    | 0      |
+| VELOCITY_STATUS | Velocity status bitmask (see [VELOCITY_STATUS](#VELOCITY_STATUS)) | -        | uint16 | 2    | 4      |
+| VELOCITY_0      | Velcoity component 0, body X (forward) or navigation North        | m/s      | float  | 4    | 6      |
+| VELOCITY_1      | Velcoity component 1, body Y (right) or navigation East           | m/s      | float  | 4    | 10     |
+| VELOCITY_2      | Velcoity component 2, body Z (down) or navigation Down            | m/s      | float  | 4    | 14     |
+| VELOCITY_STD_0  | Standard deviation of the velocity 0 component                    | m/s      | float  | 4    | 18     |
+| VELOCITY_STD_1  | Standard deviation of the velocity 1 component                    | m/s      | float  | 4    | 22     |
+| VELOCITY_STD_2  | Standard deviation of the velocity 2 component                    | m/s      | float  | 4    | 26     |
+
+#### VELOCITY_STATUS Definition {#VELOCITY_STATUS}
+
+| Bit   | Name                        | Description                                                                      |
+| ----- | --------------------------- | -------------------------------------------------------------------------------- |
+| [0-2] | SBG_ECOM_VELOCITY_TIME_TYPE | Indicates the velocity time type (see [VELOCITY_TIME_TYPE](#VELOCITY_TIME_TYPE)) |
+| 3     | SBG_ECOM_VELOCITY_0_VALID   | Set if the velocity component 0 information is valid                             |
+| 4     | SBG_ECOM_VELOCITY_1_VALID   | Set if the velocity component 1 information is valid                             |
+| 5     | SBG_ECOM_VELOCITY_2_VALID   | Set if the velocity component 2 information is valid                             |
+| 6     | SBG_ECOM_VELOCITY_STD_VALID | Set if the velocity standard deviation information is valid                      |
+
+##### VELOCITY_TIME_TYPE Definition
+
+| Value | Name                                     | Description                                             |
+| ----- | ---------------------------------------- | ------------------------------------------------------- |
+| 0     | SBG_ECOM_VELOCITY_TIME_TYPE_TIMESTAMP    | `TIME_STAMP` represents time since INS power-up (in µs) |
+| 1     | SBG_ECOM_VELOCITY_TIME_TYPE_DELAY        | `TIME_STAMP` represents a measurement delay (in µs)     |
+| 2     | SBG_ECOM_VELOCITY_TIME_TYPE_TIME_OF_WEEK | `TIME_STAMP` represents GPS time of the week (in ms)    |
 ## Event Markers
 
 SBG Systems products support multiple input and output events, facilitating precise timestamping and synchronization of various equipment.  
@@ -1607,3 +1684,153 @@ Unused time offset fields are set to 0, and `EVENT_STATUS` indicates which field
 
 > [!WARNING]
 > Never leave an activated Sync In signal unconnected, as noise on the line may trigger spurious events at high rates.
+## Vibration Monitoring
+
+The IMU includes a built-in Fast Fourier Transform (FFT) engine that analyzes high-frequency accelerometer data to monitor vibration and acoustic noise levels.
+
+### Configuration
+
+Vibration monitoring can be enabled independently on each IMU axis **(X, Y, Z)** and configured with different window functions.  
+Selecting the appropriate window function helps adapt to various signal types and improves measurement accuracy in diverse vibration or acoustic environments.
+
+The processing cycles through each **enabled window**, then through each **enabled axis**, in sequence.  
+This approach reduces bandwidth usage while preserving good temporal coverage across all selected channels.
+
+Please check the [sbgInsRestApi](https://developer.sbg-systems.com/sbgInsRestApi) documentation from more details.
+
+### Output
+
+The device can output the following messages for one axis and one window function, triggered on a new data event:
+ - **FFT data** Provides the full FFT spectrum for detailed frequency-domain analysis.
+ - **Summary reports** Includes pre-computed metrics to assess vibration levels.
+ 
+### Status Field {#VIB_MON_STATUS}
+
+The vibration monitoring `STATUS` field is shared between `SBG_ECOM_LOG_VIB_MON_FFT` and `SBG_ECOM_LOG_VIB_MON_REPORT` messages.  
+It provides information about the axis and window function used for the vibration monitoring.
+
+| Bits   | Type  | Name                     | Description                                                                                    |
+|--------|-------|--------------------------|------------------------------------------------------------------------------------------------|
+| [0-2]  | Enum  | SBG_ECOM_VIB_MON_AXIS    | Axis on which the vibration monitoring has been computed. (see [VIB_MON_AXIS](#VIB_MON_AXIS)). |
+| [3-5]  | Enum  | SBG_ECOM_VIB_MON_WINDOW  | Window used for vibration monitoring. (see [VIB_MON_WINDOW](#VIB_MON_WINDOW)).                 |
+
+#### Axis Enumeration {#VIB_MON_AXIS}
+
+| Value | Name                         | Description                                      |
+|-------|------------------------------|--------------------------------------------------|
+| 0     | SBG_ECOM_VIB_MON_AXIS_X      | Vibration monitoring on X axis.                  |
+| 1     | SBG_ECOM_VIB_MON_AXIS_Y      | Vibration monitoring on Y axis.                  |
+| 2     | SBG_ECOM_VIB_MON_AXIS_Z      | Vibration monitoring on Z axis.                  |
+
+#### Window Enumeration {#VIB_MON_WINDOW}
+
+| Value | Name                                 | Description                                  |
+|-------|--------------------------------------|----------------------------------------------|
+| 0     | SBG_ECOM_VIB_MON_WINDOW_RECTANGULAR  | Rectangular window (also called Uniform).    |
+| 1     | SBG_ECOM_VIB_MON_WINDOW_HANNING      | Hanning window (also known as Hann).         |
+| 2     | SBG_ECOM_VIB_MON_WINDOW_FLAT_TOP     | Flat Top window.                             |
+
+### SBG_ECOM_LOG_VIB_MON_FFT (59) {#SBG_ECOM_LOG_VIB_MON_FFT}
+
+This message provides the raw output of the IMU’s built-in Fast Fourier Transform (FFT) engine.  
+It includes FFT magnitude values in m/s² from DC and up to the Nyquist frequency (FSAMPLING/2).  
+Frequency bin values are not transmitted directly and must be reconstructed using the known sampling frequency and FFT length.
+
+Due to the large size of the data, the full FFT message is split into multiple chunks. Each chunk is sent individually using the structure described below.  
+The host is responsible for reassembling the chunks to reconstruct the complete FFT message.
+
+- **Message Name (ID):** `SBG_ECOM_LOG_VIB_MON_FFT (59)`
+- **Compatibility:** PULSE IMU & High Performance INS
+- **Firmware:** ![PULSE](https://img.shields.io/badge/PULSE-2.0-blue) ![HPINS](https://img.shields.io/badge/HPINS-5.5-blue)
+- **Payload Size:** Variable (up to 70 bytes)
+
+#### Chunk Frame Structure
+
+Each chunk contains a partial payload of the full FFT message.
+
+| Field        | Description                                               | Unit | Format   | Size       | Offset |
+|--------------|-----------------------------------------------------------|------|----------|------------|--------|
+| PAGE_INDEX   | Zero-based index of the current chunk.                    | -    | uint16   | 2          | 0      |
+| NR_PAGES     | Total number of chunks for this FFT message.              | -    | uint16   | 2          | 2      |
+| SIZE         | Size in bytes for the BUFFER field.                       | -    | uint16   | 2          | 4      |
+| BUFFER       | FFT data chunk, part of the full FFT message.             | -    | uint8[]  | [0-64]     | 6      |
+
+#### Reassembled Message Format
+
+Once all chunks are reassembled, the full message has the following structure:
+
+| Field        | Description                                                    | Unit | Format   | Size       | Offset |
+|--------------|----------------------------------------------------------------|------|----------|------------|--------|
+| TIMESTAMP    | Time since sensor was powered up.                              | µs   | uint32   | 4          |  0     |
+| STATUS       | FFT processing status (see [VIB_MON_STATUS](#VIB_MON_STATUS)). | -    | uint16   | 2          |  4     |
+| FSAMPLING    | Sampling frequency used for the FFT.                           | Hz   | uint16   | 2          |  6     |
+| BIN_COUNT    | Number of FFT bins (i.e., number of magnitude values).         | -    | uint16   | 2          |  8     |
+| SCALE_FACTOR | Scale factor to convert raw FFT values to physical units.      | -    | float    | 4          | 10     |
+| OFFSET       | Offset to apply after scaling to get physical units.           | -    | float    | 4          | 14     |
+| ACF          | Amplitude correction factor of the window.                     | -    | float    | 4          | 18     |
+| ECF          | Energy correction factor of the window.                        | -    | float    | 4          | 22     |
+| DATA         | Array of raw FFT magnitudes.                                   | m/s² | uint16[] | Variable   | 26     |
+
+#### Reconstructing Frequency and Magnitude
+
+Only FFT magnitudes are transmitted (to save bandwidth); associated frequency values must be reconstructed on the host using the following formula:
+
+$$f_{bin} = \frac{bin\_{index} \cdot f_{sampling}}{2 \cdot bin_{count}}$$
+
+The magnitude is defined as twice the norm of the FFT complex output, normalized by the size of the FFT. 
+
+To convert raw FFT magnitudes into physical units (in m/s²):
+$$magnitude = raw \cdot scale + offset$$
+
+A window is applied before the FFT computation: the FFT raw magnitudes need to be corrected to retrieve the accurate values.
+
+When analysing the amplitude of an harmonic:
+$$magnitude_{corrected} = acf \cdot magnitude$$
+
+When analysing the energy of an harmonic (e.g. to compute gRMS):
+$$magnitude_{corrected} = ecf \cdot magnitude$$
+
+The gRMS on the entire spectrum is:
+$$gRMS = \sqrt{ (ecf \cdot magnitude_{0})^2 + \sum_{i=1}^{bin_{count}} { \frac { (ecf \cdot magnitude_{i})^2 } {2} } \cdot }$$
+
+> [!NOTE]
+> ACF and ECF should never be applied at the same time.
+
+> [!NOTE]
+> The maximum observable frequency is FSAMPLING / 2 (Nyquist limit).
+
+### SBG_ECOM_LOG_VIB_MON_REPORT (60) {#SBG_ECOM_LOG_VIB_MON_REPORT}
+
+This message provides a synthetic summary of the vibration monitoring results, offering key vibration indicators derived from the accelerometer signal.  
+It includes an overall vibration level **gRMS**, as well as detailed information over four evenly spaced frequency bands covering the full spectrum from DC to the Nyquist frequency.
+
+- **Message Name (ID):** `SBG_ECOM_LOG_VIB_MON_REPORT (60)`
+- **Compatibility:** PULSE IMU & High Performance INS
+- **Firmware:** ![PULSE](https://img.shields.io/badge/PULSE-2.0-blue) ![HPINS](https://img.shields.io/badge/HPINS-5.5-blue)
+- **Payload Size:** 94 bytes
+
+| Field           | Description                                                                | Unit  | Format  | Size | Offset |
+|-----------------|----------------------------------------------------------------------------|-------|---------|------|--------|
+| TIMESTAMP       | Time since sensor was powered up.                                          | µs    | uint32  | 4    |  0     |
+| STATUS          | Processing status (see [VIB_MON_STATUS](#VIB_MON_STATUS)).                 | -     | uint16  | 2    |  4     |
+| MEAN            | Time-domain mean of the accelerometer signal (DC component).               | m/s²  | float   | 4    |  6     |
+| RMS             | Overall vibration level (gRMS) computed from the FFT spectrum.             | m/s²  | float   | 4    | 10     |
+| BAND1           | Metrics for the first frequency band (see [VIB_MON_BAND](#VIB_MON_BAND)).  | -     | -       | 20   | 14     |
+| BAND2           | Metrics for the second frequency band (see [VIB_MON_BAND](#VIB_MON_BAND)). | -     | -       | 20   | 34     |
+| BAND3           | Metrics for the third frequency band (see [VIB_MON_BAND](#VIB_MON_BAND)).  | -     | -       | 20   | 54     |
+| BAND4           |	Metrics for the fourth frequency band (see [VIB_MON_BAND](#VIB_MON_BAND)). | -     | -       | 20   | 74     |
+
+#### Frequency Band Structure {#VIB_MON_BAND}
+
+Each band provides vibration metrics within a specific frequency range.
+
+| Field           | Description                                                                         | Unit  | Format  | Size | Offset |
+|-----------------|-------------------------------------------------------------------------------------|-------|---------|------|--------|
+| FREQ1           | Start frequency of the band (inclusive).                                            | Hz    | float   | 4    | 0      |
+| FREQ2           | End frequency of the band (inclusive).                                              | Hz    | float   | 4    | 4      |
+| RMS             | RMS of the signal within the band (gRMS vibration level).                           | m/s²  | float   | 4    | 8      |
+| PEAK_HARMONIC   | Frequency of the peak harmonic within the band.                                     | Hz    | float   | 4    | 12     |
+| PEAK_MAGNITUDE  | Magnitude of the peak harmonic within the band.                                     | m/s²  | float   | 4    | 16     |
+
+> [!NOTE]
+> All reported values have already been corrected for the energy loss introduced by the FFT windowing function.

@@ -41,7 +41,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_UTC_TIME
      */
-    class CLoggerEntryUtcTime : public ILoggerEntry, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_UTC_TIME>
+    class CLoggerEntryUtcTime : public IFileLogger, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_UTC_TIME>
     {
     public:
 
@@ -63,13 +63,15 @@ namespace sbg
         //----------------------------------------------------------------------//
 
         /*!
-         * Process the incoming log to update the context with latest UTC time information.
+         * Called before processing the log entry.
          *
-         * \param[in/out]   context                         Logger context and settings.
-         * \param[in]       logData                         Received sbgECom log data to process.
-         * \return                                          true to continue processing the log or false to skip/discard it.
+         * Specific implementation that updates the context with the latest UTC time information.
+         * 
+         * \param[in,out]   context                         Logger context containing configuration and state.
+         * \param[in]       logData                         Incoming sbgECom log data to be processed.
+         * \return                                          True to continue processing; false to skip the log entry.
          */
-        bool preProcess(CLoggerContext &context, const SbgEComLogUnion &logData) override;
+        bool prepareProcess(CLoggerContext &context, const SbgEComLogUnion &logData) override;
 
         /*!
          * Write the header to the file and/or console.
@@ -99,7 +101,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_STATUS
      */
-    class CLoggerEntryStatus : public ILoggerEntry, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_STATUS>
+    class CLoggerEntryStatus : public IFileLogger, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_STATUS>
     {
     public:
 
@@ -147,7 +149,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_DIAG
      */
-    class CLoggerEntryDiag : public ILoggerEntry, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_DIAG>
+    class CLoggerEntryDiag : public IFileLogger, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_DIAG>
     {
     public:
 
@@ -168,12 +170,14 @@ namespace sbg
         //----------------------------------------------------------------------//
 
         /*!
-         * For diagnostic messages, never discard data when time is invalid.
-         *
-         * \param[in]   context                             Logger context and settings.
-         * \return                                          always returns false.
+         * Determines whether the log data should be discarded, for example due to an invalid timestamp.
+         * 
+         * Diagnostic messages are never discarded, even if the timestamp is invalid.
+         * 
+         * \param[in]   context                             Current logger context containing output settings.
+         * \return                                          True if the data should be discarded; false otherwise.
          */
-        bool getDiscardData(const CLoggerContext &context) const override;
+        bool shouldDiscardData(const CLoggerContext &context) const override;
 
         /*!
          * Write the data log to the file
@@ -195,7 +199,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_PTP_STATUS
      */
-    class CLoggerEntryPtpStatus : public ILoggerEntry, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_PTP_STATUS>
+    class CLoggerEntryPtpStatus : public IFileLogger, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_PTP_STATUS>
     {
     public:
 
@@ -275,7 +279,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_RTCM_RAW
      */
-    class CLoggerEntryRtcmRaw : public ILoggerEntry, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_RTCM_RAW>
+    class CLoggerEntryRtcmRaw : public IFileLogger, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_RTCM_RAW>
     {
     public:
         //----------------------------------------------------------------------//
@@ -305,7 +309,7 @@ namespace sbg
          *
          * \return                                          false for text file and true for binary.
          */
-        bool isBinary() const override;
+        bool isBinaryFile() const override;
 
     private:
 

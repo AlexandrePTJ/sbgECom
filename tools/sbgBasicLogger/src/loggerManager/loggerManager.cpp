@@ -10,6 +10,7 @@
 #include <interfaces/sbgInterfaceSerial.h>
 #include <interfaces/sbgInterfaceUdp.h>
 #include <network/sbgNetwork.h>
+#include <streamBuffer/sbgStreamBuffer.h>
 
 // sbgECom headers
 #include <sbgEComLib.h>
@@ -31,7 +32,7 @@ CLoggerManager::CLoggerManager(const CLoggerSettings &settings):
 m_context(settings)
 {
 	openInterface();
-	
+
 	if (sbgEComInit(&m_ecomHandle, &m_interface) != SBG_NO_ERROR)
 	{
 		throw std::runtime_error("unable to init sbgECom library");
@@ -40,8 +41,8 @@ m_context(settings)
 	sbgEComSetReceiveLogCallback(&m_ecomHandle, onSbgEComLogReceived, this);
 
 	sbgEComSessionInfoCtxConstruct(&m_ecomSessionInfoCtx);
-
-	m_sessionInfoFileId = 0;
+	
+	m_sessionInfoFileId	= 0;
 }
 
 CLoggerManager::~CLoggerManager()
@@ -58,7 +59,7 @@ CLoggerManager::StreamStatus CLoggerManager::processOneLog()
 {
 	SbgErrorCode	errorCode;
 	StreamStatus	streamStatus;
-	
+
 	errorCode = sbgEComHandleOneLog(&m_ecomHandle);
 
 	if (errorCode == SBG_NOT_READY)
@@ -140,7 +141,7 @@ SbgErrorCode CLoggerManager::onSbgEComLogReceived(SbgEComHandle *pHandle, SbgECo
 	assert(pUserArg);
 
 	pLogManager = static_cast<CLoggerManager*>(pUserArg);
-	
+
 	if ((msgClass == SBG_ECOM_CLASS_LOG_ECOM_0) && (msgId == SBG_ECOM_LOG_SESSION_INFO))
 	{
 		pLogManager->processSessionInformation(&pLogData->sessionInfoData);

@@ -29,7 +29,7 @@ std::string CLoggerEntryUtcTime::getName() const
 	return "utcTime";
 }
 
-bool CLoggerEntryUtcTime::preProcess(CLoggerContext &context, const SbgEComLogUnion &logData)
+bool CLoggerEntryUtcTime::prepareProcess(CLoggerContext &context, const SbgEComLogUnion &logData)
 {
 	context.setUtcTime(logData.utcData);
 
@@ -128,7 +128,7 @@ std::string CLoggerEntryDiag::getName() const
 	return "diag";
 }
 
-bool CLoggerEntryDiag::getDiscardData(const CLoggerContext &context) const
+bool CLoggerEntryDiag::shouldDiscardData(const CLoggerContext &context) const
 {
 	SBG_UNUSED_PARAMETER(context);
 
@@ -378,7 +378,7 @@ std::string CLoggerEntryRtcmRaw::getFileName() const
 	return getName() + ".bin";
 }
 
-bool CLoggerEntryRtcmRaw::isBinary() const
+bool CLoggerEntryRtcmRaw::isBinaryFile() const
 {
 	return true;
 }

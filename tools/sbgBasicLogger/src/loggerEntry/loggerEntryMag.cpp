@@ -75,7 +75,7 @@ std::string CLoggerEntryMagCalib::getFileName() const
 	return getName() + ".bin";
 }
 
-bool CLoggerEntryMagCalib::isBinary() const
+bool CLoggerEntryMagCalib::isBinaryFile() const
 {
 	return true;
 }

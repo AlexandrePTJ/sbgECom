@@ -38,7 +38,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_MAG
      */
-    class CLoggerEntryMag : public ILoggerEntry, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_MAG>
+    class CLoggerEntryMag : public IFileLogger, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_MAG>
     {
     public:
 
@@ -86,7 +86,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_MAG_CALIB
      */
-    class CLoggerEntryMagCalib : public ILoggerEntry, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_MAG_CALIB>
+    class CLoggerEntryMagCalib : public IFileLogger, public ILoggerEntryKey<SBG_ECOM_CLASS_LOG_ECOM_0, SBG_ECOM_LOG_MAG_CALIB>
     {
     public:
         //----------------------------------------------------------------------//
@@ -116,7 +116,7 @@ namespace sbg
          * 
          * \return                                          false for text file and true for binary.
          */
-        bool isBinary() const override;
+        bool isBinaryFile() const override;
 
     private:
         

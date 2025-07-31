@@ -29,6 +29,7 @@
 #include <loggerEntry/loggerEntryImu.h>
 #include <loggerEntry/loggerEntryMag.h>
 #include <loggerEntry/loggerEntryShipMotion.h>
+#include <loggerEntry/loggerEntryVibMon.h>
 
 
 // Local headers
@@ -56,13 +57,14 @@ void CLoggerApp::createLogger(const CLoggerSettings &settings)
 	m_manager->registerLog<sbg::CLoggerEntryAirData>();
 	m_manager->registerLog<sbg::CLoggerEntryDepth>();
 	m_manager->registerLog<sbg::CLoggerEntryUsbl>();
+	m_manager->registerLog<sbg::CLoggerEntryVelocity1>();
 
 	//
 	// DVL aiding
 	///
 	m_manager->registerLog<sbg::CLoggerEntryDvlBottom>();
 	m_manager->registerLog<sbg::CLoggerEntryDvlWater>();
-		
+
 	//
 	// Register EKF logs
 	//
@@ -92,7 +94,7 @@ void CLoggerApp::createLogger(const CLoggerSettings &settings)
 	m_manager->registerLog<sbg::CLoggerEntryDiag>();
 	m_manager->registerLog<sbg::CLoggerEntryPtpStatus>();
 	m_manager->registerLog<sbg::CLoggerEntryRtcmRaw>();
-			
+
 	//
 	// Register GNSS 1 logs
 	//
@@ -116,7 +118,7 @@ void CLoggerApp::createLogger(const CLoggerSettings &settings)
 	//
 	m_manager->registerLog<sbg::CLoggerEntryImuData>();
 	m_manager->registerLog<sbg::CLoggerEntryImuShort>();
-	m_manager->registerLog<sbg::CLoggerEntryImuFast>();		
+	m_manager->registerLog<sbg::CLoggerEntryImuFast>();
 
 	//
 	// Magnetometer logs
@@ -130,6 +132,12 @@ void CLoggerApp::createLogger(const CLoggerSettings &settings)
 	m_manager->registerLog<sbg::CLoggerEntryShipMotionRt>();
 	m_manager->registerLog<sbg::CLoggerEntryShipMotionHp>();
 
+	//
+	// Vibration monitoring logs
+	//
+	m_manager->registerLog<sbg::CLoggerEntryVibMonFft>();
+	m_manager->registerLog<sbg::CLoggerEntryVibMonReport>();
+	
 }
 
 void CLoggerApp::process()
@@ -171,7 +179,7 @@ CLoggerSettings CLoggerApp::processArgs(int argc, char **argv)
 	struct arg_lit						*pLogsHeaderArg;
 	struct arg_str						*pStatusFormatArg;
 	struct arg_str						*pTimeModeArg;
-	struct arg_lit						*pDiscardInvalidTimeArg;		
+	struct arg_lit						*pDiscardInvalidTimeArg;
 	struct arg_end						*pEndArg;
 
 	void								*argTable[] =
@@ -190,13 +198,13 @@ CLoggerSettings CLoggerApp::processArgs(int argc, char **argv)
 
 		pWriteLogsArg			= arg_lit0(		"w",	"write-logs",										"write logs in different files"),
 		pWriteLogsDirArg		= arg_str0(		"o",	"dir",					"DIRECTORY",				"directory to write logs into"),
-				
+
 		pFileDecimationArg		= arg_int0(		"d",	"file-decimation",		"FILE DECIMATION",			"file decimation"),
 		pScreenDecimationArg	= arg_int0(		"c",	"console-decimation",	"CONSOLE DECIMATION",		"output stream decimation"),
 
 		pPrintLogsArg			= arg_lit0(		"p",	"print-logs",										"print the logs on the output stream"),
 		pLogsHeaderArg			= arg_lit0(		"H",	"disable-header",									"disable header for files"),
-			
+
 		pStatusFormatArg		= arg_str0(		"f",	"status-format",		"decimal or hexadecimal",	"select the format to use for status fields"),
 		pTimeModeArg			= arg_str0(		"m",	"time-mode",			"timestamp or utcIso8601",	"select time base to output"),
 		pDiscardInvalidTimeArg	= arg_lit0(		"t",	"discard-invalid-time",								"discard data without a valid UTC time"),
@@ -255,11 +263,11 @@ CLoggerSettings CLoggerApp::processArgs(int argc, char **argv)
 			{
 				settings.setWriteHeaderToFile(true);
 			}
-			
+
 			if (pWriteLogsArg->count != 0)
 			{
 				settings.setWriteToFile(true);
-				
+
 				if (pFileDecimationArg->count != 0)
 				{
 					settings.setFileDecimation(pFileDecimationArg->ival[0]);
@@ -362,7 +370,7 @@ CLoggerSettings CLoggerApp::processArgs(int argc, char **argv)
 			{
 				throw std::invalid_argument("Please select only one input interface.");
 			}
-				
+
 			if (!settings.hasInterfaceConf())
 			{
 				throw std::invalid_argument("Please select at least one input interface among serial, file or UDP.");
@@ -376,9 +384,9 @@ CLoggerSettings CLoggerApp::processArgs(int argc, char **argv)
 
 		throw e;
 	}
-		
+
 	arg_freetable(argTable, SBG_ARRAY_SIZE(argTable));
-		
+
 	return settings;
 }
 

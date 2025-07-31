@@ -42,7 +42,7 @@ namespace sbg
     /*!
      * Handle SBG_ECOM_LOG_DVL_#
      */
-    class CLoggerEntryDvl : public ILoggerEntry
+    class CLoggerEntryDvl : public IFileLogger
     {
     private:
         

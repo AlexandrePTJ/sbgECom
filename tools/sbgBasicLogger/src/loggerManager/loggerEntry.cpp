@@ -19,36 +19,22 @@ namespace sbg
 {
 
 //----------------------------------------------------------------------//
-//- Constructor/destructor                                             -//
+//- Constructor/destructor (ILoggerBase)                               -//
 //----------------------------------------------------------------------//
 
-ILoggerEntry::~ILoggerEntry()
+ILoggerBase::~ILoggerBase()
 {
-}
-
-//----------------------------------------------------------------------//
-//- Public getters                                                     -//
-//----------------------------------------------------------------------//
-
-std::string ILoggerEntry::getFileName() const
-{
-	return getName() + ".txt";
-}
-
-bool ILoggerEntry::isBinary() const
-{
-	return false;
 }
 
 //----------------------------------------------------------------------//
 //- Public methods                                                     -//
 //----------------------------------------------------------------------//
 
-void ILoggerEntry::process(CLoggerContext &context, const SbgEComLogUnion &logData)
+void ILoggerBase::process(CLoggerContext &context, const SbgEComLogUnion &logData)
 {
-	if (preProcess(context, logData))
+	if (prepareProcess(context, logData))
 	{
-		if (!getDiscardData(context))
+		if (!shouldDiscardData(context))
 		{
 			if (context.getSettings().getWriteToConsole())
 			{
@@ -61,27 +47,19 @@ void ILoggerEntry::process(CLoggerContext &context, const SbgEComLogUnion &logDa
 				writeDataToConsole(context, logData);
 			}
 
-			if (context.getSettings().getWriteToFile())
-			{
-				createFile(context);
-
-				if (context.getSettings().getWriteHeaderToFile() && !m_headerWritten)
-				{
-					writeHeaderToFile(context);
-					m_headerWritten = true;
-				}
-
-				writeDataToFile(context, logData);
-			}
+			//
+			// Perform additional processing specific to the derived class (e.g., file, etc.)
+			//
+			doProcess(context, logData);
 		}
 	}
 }
 
 //----------------------------------------------------------------------//
-//- Private methods                                                    -//
+//- Overridable Hooks (Private Template Method Pattern)                -//
 //----------------------------------------------------------------------//
 
-bool ILoggerEntry::getDiscardData(const CLoggerContext &context) const
+bool ILoggerBase::shouldDiscardData(const CLoggerContext &context) const
 {
 	if (context.getSettings().getDiscardInvalidTime())
 	{
@@ -93,13 +71,71 @@ bool ILoggerEntry::getDiscardData(const CLoggerContext &context) const
 	}
 }
 
-void ILoggerEntry::createFile(const CLoggerContext &context)
+bool ILoggerBase::prepareProcess(CLoggerContext &context, const SbgEComLogUnion &logData)
+{
+	SBG_UNUSED_PARAMETER(context);
+	SBG_UNUSED_PARAMETER(logData);
+
+	return true;
+}
+
+void ILoggerBase::doProcess(const CLoggerContext &context, const SbgEComLogUnion &logData)
+{
+	SBG_UNUSED_PARAMETER(context);
+	SBG_UNUSED_PARAMETER(logData);
+}
+
+void ILoggerBase::writeDataToConsole(const CLoggerContext &context, const SbgEComLogUnion &logData)
+{
+	SBG_UNUSED_PARAMETER(context);
+	SBG_UNUSED_PARAMETER(logData);
+}
+
+//----------------------------------------------------------------------//
+//- Constructor/destructor (IFileLogger)                               -//
+//----------------------------------------------------------------------//
+
+IFileLogger::~IFileLogger()
+{
+}
+
+//----------------------------------------------------------------------//
+//- Public getters                                                     -//
+//----------------------------------------------------------------------//
+
+std::string IFileLogger::getFileName() const
+{
+	return getName() + ".txt";
+}
+
+bool IFileLogger::isBinaryFile() const
+{
+	return false;
+}
+
+void IFileLogger::doProcess(const CLoggerContext &context, const SbgEComLogUnion &logData)
+{
+	if (context.getSettings().getWriteToFile())
+	{
+		createFile(context);
+
+		if (context.getSettings().getWriteHeaderToFile() && !m_headerWritten)
+		{
+			writeHeaderToFile(context);
+			m_headerWritten = true;
+		}
+
+		writeDataToFile(context, logData);
+	}
+}
+
+void IFileLogger::createFile(const CLoggerContext &context)
 {
 	if (!m_outFile.is_open())
 	{
 		std::ofstream::openmode		mode;
 
-		if (isBinary())
+		if (isBinaryFile())
 		{
 			mode = std::ofstream::out | std::ofstream::binary;
 		}
@@ -117,23 +153,9 @@ void ILoggerEntry::createFile(const CLoggerContext &context)
 	}
 }
 
-bool ILoggerEntry::preProcess(CLoggerContext &context, const SbgEComLogUnion &logData)
+void IFileLogger::writeHeaderToFile(const CLoggerContext &context)
 {
 	SBG_UNUSED_PARAMETER(context);
-	SBG_UNUSED_PARAMETER(logData);
-
-	return true;
-}
-
-void ILoggerEntry::writeHeaderToFile(const CLoggerContext &context)
-{
-	SBG_UNUSED_PARAMETER(context);
-}
-
-void ILoggerEntry::writeDataToConsole(const CLoggerContext &context, const SbgEComLogUnion &logData)
-{
-	SBG_UNUSED_PARAMETER(context);
-	SBG_UNUSED_PARAMETER(logData);
 }
 
 }; // Namespace sbg

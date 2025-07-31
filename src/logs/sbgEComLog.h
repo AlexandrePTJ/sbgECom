@@ -8,7 +8,7 @@
  *
  * \copyright       Copyright (C) 2007-2024, SBG Systems SAS. All rights reserved.
  * \beginlicense    The MIT license
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -26,7 +26,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  * \endlicense
  */
 
@@ -67,6 +67,8 @@
 #include "sbgEComLogStatus.h"
 #include "sbgEComLogUsbl.h"
 #include "sbgEComLogUtc.h"
+#include "sbgEComLogVelocity.h"
+#include "sbgEComLogVibMon.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -108,6 +110,9 @@ typedef union _SbgEComLogUnion
     SbgEComLogDiagData              diagData;           /*!< Stores data for the SBG_ECOM_LOG_DIAG message. */
     SbgEComLogSatList               satGroupData;       /*!< Stores data for the SBG_ECOM_LOG_SAT message. */
     SbgEComLogSessionInfo           sessionInfoData;    /*!< Stores data for the SBG_ECOM_LOG_SESSION_INFO message. */
+    SbgEComLogVelocity              velocityData;       /*!< Stores data for the SBG_ECOM_LOG_VELOCITY_# message. */
+    SbgEComLogVibMonFft             vibMonFft;          /*!< Stores data for the SBG_ECOM_LOG_VIB_MON_FFT message. */
+    SbgEComLogVibMonReport          vibMonReport;       /*!< Stores data for the SBG_ECOM_LOG_VIB_MON_REPORT message. */
 
     /* Fast logs */
     SbgEComLogImuFastLegacy         fastImuData;        /*!< Stores Fast IMU Data for 1KHz output */
