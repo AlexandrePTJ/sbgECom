@@ -1,0 +1,28 @@
+name: CI
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+        matrix:
+            os: [ubuntu-latest, windows-latest]
+    
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install CMake and Ninja
+        uses: lukka/get-cmake@latest
+    
+      - if: runner.os == 'Windows'
+        uses: TheMrMilchmann/setup-msvc-dev@v3
+
+      - name: Configure
+        run: |
+          cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLES=ON -DBUILD_TOOLS=ON -DUSE_DEPRECATED_MACROS=OFF
+
+      - name: Build
+        run: |
+          cmake --build build
